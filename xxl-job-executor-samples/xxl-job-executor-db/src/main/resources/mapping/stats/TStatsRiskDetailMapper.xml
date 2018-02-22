@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infincash.statistics.risk.mapper.stats.TStatsRiskDetailMapper">
+  <resultMap id="BaseResultMap" type="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="stats_time" jdbcType="TIMESTAMP" property="statsTime" />
+    <result column="a_hour_count" jdbcType="INTEGER" property="aHourCount" />
+    <result column="risk_rule_id" jdbcType="VARCHAR" property="riskRuleId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, stats_time, a_hour_count, risk_rule_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_stats_risk_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_stats_risk_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    insert into t_stats_risk_detail (id, stats_time, a_hour_count, 
+      risk_rule_id)
+    values (#{id,jdbcType=BIGINT}, #{statsTime,jdbcType=TIMESTAMP}, #{aHourCount,jdbcType=INTEGER}, 
+      #{riskRuleId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    insert into t_stats_risk_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="statsTime != null">
+        stats_time,
+      </if>
+      <if test="aHourCount != null">
+        a_hour_count,
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="statsTime != null">
+        #{statsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aHourCount != null">
+        #{aHourCount,jdbcType=INTEGER},
+      </if>
+      <if test="riskRuleId != null">
+        #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    update t_stats_risk_detail
+    <set>
+      <if test="statsTime != null">
+        stats_time = #{statsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aHourCount != null">
+        a_hour_count = #{aHourCount,jdbcType=INTEGER},
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id = #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    update t_stats_risk_detail
+    set stats_time = #{statsTime,jdbcType=TIMESTAMP},
+      a_hour_count = #{aHourCount,jdbcType=INTEGER},
+      risk_rule_id = #{riskRuleId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="stats_time" jdbcType="TIMESTAMP" property="statsTime" />
+    <result column="a_hour_count" jdbcType="INTEGER" property="aHourCount" />
+    <result column="risk_rule_id" jdbcType="VARCHAR" property="riskRuleId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, stats_time, a_hour_count, risk_rule_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_stats_risk_detail
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_stats_risk_detail
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    insert into t_stats_risk_detail (id, stats_time, a_hour_count, 
+      risk_rule_id)
+    values (#{id,jdbcType=BIGINT}, #{statsTime,jdbcType=TIMESTAMP}, #{aHourCount,jdbcType=INTEGER}, 
+      #{riskRuleId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    insert into t_stats_risk_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="statsTime != null">
+        stats_time,
+      </if>
+      <if test="aHourCount != null">
+        a_hour_count,
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="statsTime != null">
+        #{statsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aHourCount != null">
+        #{aHourCount,jdbcType=INTEGER},
+      </if>
+      <if test="riskRuleId != null">
+        #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    update t_stats_risk_detail
+    <set>
+      <if test="statsTime != null">
+        stats_time = #{statsTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="aHourCount != null">
+        a_hour_count = #{aHourCount,jdbcType=INTEGER},
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id = #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infincash.statistics.risk.table.stats.TStatsRiskDetail">
+    update t_stats_risk_detail
+    set stats_time = #{statsTime,jdbcType=TIMESTAMP},
+      a_hour_count = #{aHourCount,jdbcType=INTEGER},
+      risk_rule_id = #{riskRuleId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

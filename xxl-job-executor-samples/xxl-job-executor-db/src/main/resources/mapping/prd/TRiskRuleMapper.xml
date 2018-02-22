@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infincash.statistics.risk.mapper.TRiskRuleMapper">
+    <resultMap type="com.infincash.statistics.risk.table.extend.RiskStatsDTO" id="RiskStatsDTOMap">
+        <id property="id" column="id" />
+        <result property="userName" column="username" />
+        <result property="passW ord" column="password" />
+    </resultMap>
+    
+    <select id="countRiskRule" resultMap="RiskStatsDTOMap">
+        select 
+          risk_rule_id, count(1), now()
+        from t_user_risk 
+        where user_id in (select user_id from t_user where DATE_SUB(NOW(),INTERVAL  1 HOUR) <= register_time)    
+        GROUP by risk_rule_id order by risk_rule_id;
+    </select>
+</mapper>
