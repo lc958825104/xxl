@@ -1,9 +1,9 @@
 package com.xxl.job.executor.service.jobhandler;
 
-import java.util.concurrent.TimeUnit;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.infincash.statistics.risk.RiskService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
@@ -22,10 +22,13 @@ import com.xxl.job.core.log.XxlJobLogger;
 @JobHandler(value = "risk-count-statistics")
 @Component
 public class RiskCountStatisticsJobHandler extends IJobHandler {
+	@Autowired
+	RiskService service;
 
 	@Override
 	public ReturnT<String> execute(String param) throws Exception {
-		XxlJobLogger.log("XXL-JOB, 1 Hello World.");
+		int aa = service.countRecentRisk();
+		XxlJobLogger.log("aa: " + aa);
 		XxlJobLogger.log("beat at:");
 		return SUCCESS;
 	}
