@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infincash.statistics.risk.mapper.TUserRiskMapper">
+  <resultMap id="BaseResultMap" type="com.infincash.statistics.risk.table.TUserRisk">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="risk_rule_id" jdbcType="VARCHAR" property="riskRuleId" />
+    <result column="check_id" jdbcType="VARCHAR" property="checkId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, risk_rule_id, check_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_risk
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_user_risk
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    insert into t_user_risk (id, user_id, risk_rule_id, 
+      check_id)
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{riskRuleId,jdbcType=VARCHAR}, 
+      #{checkId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    insert into t_user_risk
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id,
+      </if>
+      <if test="checkId != null">
+        check_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="riskRuleId != null">
+        #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkId != null">
+        #{checkId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    update t_user_risk
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id = #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkId != null">
+        check_id = #{checkId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    update t_user_risk
+    set user_id = #{userId,jdbcType=VARCHAR},
+      risk_rule_id = #{riskRuleId,jdbcType=VARCHAR},
+      check_id = #{checkId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <resultMap id="BaseResultMap" type="com.infincash.statistics.risk.table.TUserRisk">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="risk_rule_id" jdbcType="VARCHAR" property="riskRuleId" />
+    <result column="check_id" jdbcType="VARCHAR" property="checkId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, risk_rule_id, check_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_risk
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_user_risk
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    insert into t_user_risk (id, user_id, risk_rule_id, 
+      check_id)
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{riskRuleId,jdbcType=VARCHAR}, 
+      #{checkId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    insert into t_user_risk
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id,
+      </if>
+      <if test="checkId != null">
+        check_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="riskRuleId != null">
+        #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkId != null">
+        #{checkId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    update t_user_risk
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="riskRuleId != null">
+        risk_rule_id = #{riskRuleId,jdbcType=VARCHAR},
+      </if>
+      <if test="checkId != null">
+        check_id = #{checkId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infincash.statistics.risk.table.TUserRisk">
+    update t_user_risk
+    set user_id = #{userId,jdbcType=VARCHAR},
+      risk_rule_id = #{riskRuleId,jdbcType=VARCHAR},
+      check_id = #{checkId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
