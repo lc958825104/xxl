@@ -32,10 +32,8 @@ public class RiskCountStatisticsJobHandler extends IJobHandler {
 	public ReturnT<String> execute(String param) throws Exception {
 		List<RiskStatsDTO> aa = service.countRecentRisk();
 		for (RiskStatsDTO a:aa) {
-			XxlJobLogger.log(a.getRiskRuleId() + a.getCount() + a.getTime().toGMTString());			
+			XxlJobLogger.log(a.getRiskRuleId() +", "+ a.getCount()+", "+ a.getTime());			
 		}
-		XxlJobLogger.log("beat at:");
 		return SUCCESS;
 	}
-
 }

@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Configuration
 @MapperScan(basePackages = {"com.infincash.statistics.risk.mapper.prd"}, sqlSessionFactoryRef = "sqlSessionFactoryPrd")
 public class PrdDbConfig {
+	static final String MAPPER_LOCATION = "classpath:mapping/prd/*.xml";  
+	
     @Autowired
     @Qualifier("prd")
     private DataSource prd;
@@ -22,6 +25,9 @@ public class PrdDbConfig {
     public SqlSessionFactory sqlSessionFactoryPrd() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(prd);
+        factoryBean.setMapperLocations(
+        	new PathMatchingResourcePatternResolver().getResources(MAPPER_LOCATION)
+        ); 
         return factoryBean.getObject();
     }
 
