@@ -7,7 +7,7 @@
         <artifactId>xxl-job</artifactId>
         <version>1.9.1-SNAPSHOT</version>
     </parent>
-    <artifactId>infintech-executor</artifactId>
+    <artifactId>infintech-executors</artifactId>
     <packaging>pom</packaging>
 
     <modules>
