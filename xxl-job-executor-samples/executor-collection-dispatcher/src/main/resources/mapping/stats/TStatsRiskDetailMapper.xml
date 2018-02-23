@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infincash.statistics.risk.mapper.stats.TStatsRiskDetailMapper">
+  <resultMap id="BaseResultMap" type="com.infincash.statistics.risk.table.prd.extend.RiskStatsDTO">
+        <result property="riskRuleId" column="risk_rule_id" />  
+        <result property="count" column="count1" />  
+        <result property="time" column="time" />  
+  </resultMap>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into t_stats_risk_detail
+    (stats_time, a_hour_count, risk_rule_id)
+    VALUES
+    <foreach collection ="list" item="oneItem" index= "index" separator =",">
+    (
+      #{oneItem.time}, #{oneItem.count},#{oneItem.riskRuleId}
+    )
+    </foreach >
+  </insert>
+</mapper>
