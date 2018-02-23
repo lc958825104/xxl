@@ -12,25 +12,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan(basePackages = {"other.mapper"}, sqlSessionFactoryRef = "sqlSessionFactory2")
+@MapperScan(basePackages = {"com.infincash.statistics.risk.mapper.stats"}, sqlSessionFactoryRef = "sqlSessionFactoryStats")
 public class StatsDbConfig {
     @Autowired
-    @Qualifier("ds2")
-    private DataSource ds2;
+    @Qualifier("stats")
+    private DataSource stats;
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory2() throws Exception {
+    public SqlSessionFactory sqlSessionFactoryStats() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(ds2);
-
-
+        factoryBean.setDataSource(stats); // 使用titan数据源, 连接titan库
         return factoryBean.getObject();
-
     }
 
     @Bean
-    public SqlSessionTemplate sqlSessionTemplate2() throws Exception {
-        SqlSessionTemplate template = new SqlSessionTemplate(sqlSessionFactory2());
+    public SqlSessionTemplate sqlSessionTemplateStats() throws Exception {
+        SqlSessionTemplate template = new SqlSessionTemplate(sqlSessionFactoryStats()); // 使用上面配置的Factory
         return template;
     }
 }

@@ -1,9 +1,12 @@
 package com.xxl.job.executor.service.jobhandler;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.infincash.statistics.risk.RiskService;
+import com.infincash.statistics.risk.table.prd.extend.RiskStatsDTO;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
@@ -27,8 +30,10 @@ public class RiskCountStatisticsJobHandler extends IJobHandler {
 
 	@Override
 	public ReturnT<String> execute(String param) throws Exception {
-		int aa = service.countRecentRisk();
-		XxlJobLogger.log("aa: " + aa);
+		List<RiskStatsDTO> aa = service.countRecentRisk();
+		for (RiskStatsDTO a:aa) {
+			XxlJobLogger.log(a.getRiskRuleId() + a.getCount() + a.getTime().toGMTString());			
+		}
 		XxlJobLogger.log("beat at:");
 		return SUCCESS;
 	}

@@ -12,26 +12,22 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan(basePackages = {"titan.mapper"}, sqlSessionFactoryRef = "sqlSessionFactory1")
+@MapperScan(basePackages = {"com.infincash.statistics.risk.mapper.prd"}, sqlSessionFactoryRef = "sqlSessionFactoryPrd")
 public class PrdDbConfig {
-
     @Autowired
-    @Qualifier("titanMasterDS")
-    private DataSource ds1;
-
+    @Qualifier("prd")
+    private DataSource prd;
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory1() throws Exception {
+    public SqlSessionFactory sqlSessionFactoryPrd() throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-        factoryBean.setDataSource(ds1); // 使用titan数据源, 连接titan库
-
+        factoryBean.setDataSource(prd);
         return factoryBean.getObject();
-
     }
 
     @Bean
-    public SqlSessionTemplate sqlSessionTemplate1() throws Exception {
-        SqlSessionTemplate template = new SqlSessionTemplate(sqlSessionFactory1()); // 使用上面配置的Factory
+    public SqlSessionTemplate sqlSessionTemplatePrd() throws Exception {
+        SqlSessionTemplate template = new SqlSessionTemplate(sqlSessionFactoryPrd());
         return template;
     }
 }
