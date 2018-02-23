@@ -6,4 +6,6 @@ import com.infincash.statistics.risk.table.prd.extend.RiskStatsDTO;
 
 public interface RiskService {
 	List<RiskStatsDTO> countRecentRisk();
+	
+	int writeRecentRisk(List<RiskStatsDTO> list);
 }
