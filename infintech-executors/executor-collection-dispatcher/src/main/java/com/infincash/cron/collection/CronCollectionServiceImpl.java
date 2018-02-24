@@ -4,8 +4,10 @@ import static com.infincash.util.Jdk8DateUtils.dateSubstract;
 import static com.infincash.util.Jdk8DateUtils.getDateAfter;
 
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,7 +22,7 @@ import com.xxl.job.core.log.XxlJobLogger;
 public class CronCollectionServiceImpl implements CronCollectionService
 {
 	@Autowired
-	TBizCollectionMapper recordMapper;
+	TBizCollectionMapper collectionMapper;
 
 	@Autowired
 	TBizCollectionOverdueBucketMapper bucketMapper;
@@ -30,7 +32,7 @@ public class CronCollectionServiceImpl implements CronCollectionService
 	{
 		//90天以上的是坏账
 		String badDebtDay = getDateAfter(-90);
-		List<TBizCollection> rList = recordMapper.queryAll(badDebtDay);
+		List<TBizCollection> rList = collectionMapper.queryAll(badDebtDay);
 		if (rList == null || rList.size() == 0)
 		{
 			throw new InfintechException("recordMapper.queryAll(badDebtDay) empty! badDebtDay: " + badDebtDay);
@@ -40,7 +42,32 @@ public class CronCollectionServiceImpl implements CronCollectionService
 		{
 			throw new InfintechException("bucketMapper.queryAll() empty!");
 		}
-		getWhichBucket(bList, rList);
+		Map<String, List<TBizCollection>> map = getWhichBucket(bList, rList);
+		List<TBizCollection> resultList = Lists.newLinkedList();
+		for (Entry<String, List<TBizCollection>> entry : map.entrySet())
+		{
+			String key = entry.getKey();
+			List<Map<String, Object>> userList = collectionMapper.queryUserByRoleId(key);
+			if (userList == null || userList.size()==0 ) {
+				throw new InfintechException("collectionMapper.queryUserByRoleId(key) empty! key:" + key);
+			}
+			int cycle = userList.size();
+			//FIXME 存量怎么办
+			List<TBizCollection> list = entry.getValue();
+			int a = 0;
+			for (TBizCollection s : list) {
+				Map<String, Object> tmpMap = userList.get(a%cycle);
+				String userId = (String) tmpMap.get("user_id");
+				String userRealName = (String) tmpMap.get("real_name");
+				s.setFkSystemUser(userId);
+				s.setCollectorLoginName(userRealName);
+				a++;
+			}
+			//拼接List
+			resultList.addAll(list);
+		}
+		collectionMapper.insertBatch(resultList);
+		
 	}
 
 	private Map<String, List<TBizCollection>> getWhichBucket(List<TBizCollectionOverdueBucket> bList, List<TBizCollection> rList)

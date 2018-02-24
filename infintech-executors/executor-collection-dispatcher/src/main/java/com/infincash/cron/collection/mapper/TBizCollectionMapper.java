@@ -1,19 +1,16 @@
 package com.infincash.cron.collection.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.infincash.cron.collection.table.TBizCollection;
 
 public interface TBizCollectionMapper {
 	List<TBizCollection> queryAll(String badDebtDay);
+
+	List<Map<String, Object>> queryUserByRoleId(String roleId);
 	
-    int deleteByPrimaryKey(Long id);
-
-    int insert(TBizCollection record);
-
-    int insertSelective(TBizCollection record);
-
-    TBizCollection selectByPrimaryKey(Long id);
+    int insertBatch(List<TBizCollection> record);
 
     int updateByPrimaryKeySelective(TBizCollection record);
 

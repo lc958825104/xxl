@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.infincash.cron.collection.mapper.TBizCollectionRecordMapper">
+<mapper namespace="com.infincash.cron.collection.mapper.TBizCollectionMapper">
   <resultMap id="BaseResultMap" type="com.infincash.cron.collection.table.TBizCollection">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="fk_t_project" jdbcType="VARCHAR" property="fkTProject" />
@@ -49,7 +49,8 @@
           t1.unit,
           t1.first_price_loan,
           t2.repayment_date      
-        from t_project t1 inner join t_project_refund t2 on t1.id=t2.project_id and t1.status in ('7') where t1.loan_time >  #{_parameter}
+        from t_project t1 inner join t_project_refund t2 on t1.id=t2.project_id and t1.status in ('7') 
+        where t1.loan_time >  #{_parameter}
     ) t_biz
     inner join
     t_user t_u ON t_u.user_id = t_biz.user_id
@@ -57,7 +58,14 @@
     t_user_basis t_ub on t_ub.user_id=t_u.user_id;
   </select>
  
-  <insert id="insertSelective" parameterType="com.infincash.cron.collection.table.TBizCollection">
+  <select id="queryUserByRoleId" parameterType="java.lang.String" resultType="java.util.HashMap">
+    select t1.user_id, t2.real_name from t_system_user_role t1
+        inner join 
+        t_system_user t2 on t1.user_id = t2.user_id
+    where t1.role_id = #{_parameter};
+  </select>
+ 
+  <insert id="insertBatch" parameterType="com.infincash.cron.collection.table.TBizCollection">
     insert into t_biz_collection_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -130,77 +138,80 @@
         histry_collection_count,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
+    VALUES
+    <foreach collection ="list" item="oneItem" index= "index" separator =",">
+    (
       <if test="id != null">
-        #{id,jdbcType=BIGINT},
+        #{oneItem.id,jdbcType=BIGINT},
       </if>
       <if test="fkTProject != null">
-        #{fkTProject,jdbcType=VARCHAR},
+        #{oneItem.fkTProject,jdbcType=VARCHAR},
       </if>
       <if test="fkTUser != null">
-        #{fkTUser,jdbcType=VARCHAR},
+        #{oneItem.fkTUser,jdbcType=VARCHAR},
       </if>
       <if test="fkSystemUser != null">
-        #{fkSystemUser,jdbcType=VARCHAR},
+        #{oneItem.fkSystemUser,jdbcType=VARCHAR},
       </if>
       <if test="waitOrRecord != null">
-        #{waitOrRecord,jdbcType=TINYINT},
+        #{oneItem.waitOrRecord,jdbcType=TINYINT},
       </if>
       <if test="projectNumber != null">
-        #{projectNumber,jdbcType=VARCHAR},
+        #{oneItem.projectNumber,jdbcType=VARCHAR},
       </if>
       <if test="userLoginName != null">
-        #{userLoginName,jdbcType=VARCHAR},
+        #{oneItem.userLoginName,jdbcType=VARCHAR},
       </if>
       <if test="userRealName != null">
-        #{userRealName,jdbcType=VARCHAR},
+        #{oneItem.userRealName,jdbcType=VARCHAR},
       </if>
       <if test="userPhone != null">
-        #{userPhone,jdbcType=VARCHAR},
+        #{oneItem.userPhone,jdbcType=VARCHAR},
       </if>
       <if test="loanTime != null">
-        #{loanTime,jdbcType=TIMESTAMP},
+        #{oneItem.loanTime,jdbcType=TIMESTAMP},
       </if>
       <if test="projectPeriod != null">
-        #{projectPeriod,jdbcType=VARCHAR},
+        #{oneItem.projectPeriod,jdbcType=VARCHAR},
       </if>
       <if test="firstPriceLoan != null">
-        #{firstPriceLoan,jdbcType=DECIMAL},
+        #{oneItem.firstPriceLoan,jdbcType=DECIMAL},
       </if>
       <if test="repaymentDate != null">
-        #{repaymentDate,jdbcType=TIMESTAMP},
+        #{oneItem.repaymentDate,jdbcType=TIMESTAMP},
       </if>
       <if test="overdueDayCount != null">
-        #{overdueDayCount,jdbcType=SMALLINT},
+        #{oneItem.overdueDayCount,jdbcType=SMALLINT},
       </if>
       <if test="fkTBizCollectionOverdueBucketIntervalId != null">
-        #{fkTBizCollectionOverdueBucketIntervalId,jdbcType=SMALLINT},
+        #{oneItem.fkTBizCollectionOverdueBucketIntervalId,jdbcType=SMALLINT},
       </if>
       <if test="collectorLoginName != null">
-        #{collectorLoginName,jdbcType=VARCHAR},
+        #{oneItem.collectorLoginName,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
+        #{oneItem.updateTime,jdbcType=TIMESTAMP},
       </if>
       <if test="updateBy != null">
-        #{updateBy,jdbcType=VARCHAR},
+        #{oneItem.updateBy,jdbcType=VARCHAR},
       </if>
       <if test="state != null">
-        #{state,jdbcType=TINYINT},
+        #{oneItem.state,jdbcType=TINYINT},
       </if>
       <if test="fullRepayDate != null">
-        #{fullRepayDate,jdbcType=TIMESTAMP},
+        #{oneItem.fullRepayDate,jdbcType=TIMESTAMP},
       </if>
       <if test="lastCollectionTime != null">
-        #{lastCollectionTime,jdbcType=TIMESTAMP},
+        #{oneItem.lastCollectionTime,jdbcType=TIMESTAMP},
       </if>
       <if test="nextCollectionTime != null">
-        #{nextCollectionTime,jdbcType=TIMESTAMP},
+        #{oneItem.nextCollectionTime,jdbcType=TIMESTAMP},
       </if>
       <if test="histryCollectionCount != null">
-        #{histryCollectionCount,jdbcType=SMALLINT},
+        #{oneItem.histryCollectionCount,jdbcType=SMALLINT},
       </if>
-    </trim>
+    )
+    </foreach >
   </insert>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.infincash.cron.collection.table.TBizCollectionRecord">
