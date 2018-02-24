@@ -3,7 +3,7 @@ package com.infincash.cron.collection.table;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TBizCollectionRecord {
+public class TBizCollection {
     private Long id;
 
     private String fkTProject;

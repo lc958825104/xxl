@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.infincash.cron.collection.mapper.TBizCollectionRecordMapper">
-  <resultMap id="BaseResultMap" type="com.infincash.cron.collection.table.TBizCollectionRecord">
+  <resultMap id="BaseResultMap" type="com.infincash.cron.collection.table.TBizCollection">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="fk_t_project" jdbcType="VARCHAR" property="fkTProject" />
     <result column="fk_t_user" jdbcType="VARCHAR" property="fkTUser" />
@@ -11,6 +11,8 @@
     <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
     <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
     <result column="loan_time" jdbcType="TIMESTAMP" property="loanTime" />
+    <result column="deadline" jdbcType="INT" property="deadline" />
+    <result column="unit" jdbcType="CHAR" property="unit" />
     <result column="project_period" jdbcType="VARCHAR" property="projectPeriod" />
     <result column="first_price_loan" jdbcType="DECIMAL" property="firstPriceLoan" />
     <result column="repayment_date" jdbcType="TIMESTAMP" property="repaymentDate" />
@@ -28,19 +30,34 @@
 
   <select id="queryAll" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
-      t1.id,
-      t1.number project_number,
-      t1.loan_time,
-      t1.deadline,
-      t1.unit,
-      t1.first_price_loan,
-      t2.repayment_date      
-    from t_project t1 inner join t_project_refund t2 on t1.id=t2.project_id and t1.status in ('7') 
-    where 
-      t1.loan_time > #{_parameter}
+        t_biz.project_number, 
+        t_u.login_name user_login_name, 
+        t_ub.real_name user_real_name, 
+        t_u.phone user_phone,
+        t_biz.loan_time, 
+        t_biz.deadline, 
+        t_biz.unit, 
+        t_biz.first_price_loan, t_biz.repayment_date
+    from
+    (
+        select
+          t1.user_id,
+          t1.id fk_t_project,
+          t1.number project_number,
+          t1.loan_time,
+          t1.deadline,
+          t1.unit,
+          t1.first_price_loan,
+          t2.repayment_date      
+        from t_project t1 inner join t_project_refund t2 on t1.id=t2.project_id and t1.status in ('7') where t1.loan_time >  #{_parameter}
+    ) t_biz
+    inner join
+    t_user t_u ON t_u.user_id = t_biz.user_id
+    inner join 
+    t_user_basis t_ub on t_ub.user_id=t_u.user_id;
   </select>
  
-  <insert id="insertSelective" parameterType="com.infincash.cron.collection.table.TBizCollectionRecord">
+  <insert id="insertSelective" parameterType="com.infincash.cron.collection.table.TBizCollection">
     insert into t_biz_collection_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
