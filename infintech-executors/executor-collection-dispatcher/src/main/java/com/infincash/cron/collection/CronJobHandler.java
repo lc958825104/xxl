@@ -1,4 +1,4 @@
-package com.xxl.job.executor.service.jobhandler;
+package com.infincash.cron.collection;
 
 import java.util.List;
 
@@ -22,20 +22,22 @@ import com.xxl.job.core.log.XxlJobLogger;
  *
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHandler(value = "risk-count-statistics")
+@JobHandler(value = "collectionDispatch")
 @Component
-public class RiskCountStatisticsJobHandler extends IJobHandler {
+public class CronJobHandler extends IJobHandler {
 	@Autowired
-	RiskService service;
+	CronCollectionService service;
 
 	@Override
 	public ReturnT<String> execute(String param) throws Exception {
-		List<RiskStatsDTO> list = service.countRecentRisk();
-		int res = service.writeRecentRisk(list);
-		XxlJobLogger.log("res: " + res);
+		List<RiskStatsDTO> list = service.readCollection();
+		int res = service.assignCollection(list);
+		XxlJobLogger.log("assignCollection: " + res);
 		if(res < list.size()){			
 		    return FAIL;
 		}
+		res = service.assignExemployeeCollection();
+		XxlJobLogger.log("assignCollection: " + res);
 		return SUCCESS;
 	}
 }
