@@ -80,7 +80,8 @@ public class CronCollectionServiceImpl implements CronCollectionService
 			Date d        = r.getRepaymentDate();
 			Date now      = new Date();
 			long diffDate = dateSubstract(now, d);
-			XxlJobLogger.log("d:" + d.toString() + ", now:" + now.toString() + ", diffDate:" + diffDate);
+			//FIXME 在新加坡服务器上跑无时差, 因为新加坡也是UTC+8 <==> Etc/UTC-8!
+//			XxlJobLogger.log("d:" + d.toString() + ", now:" + now.toString() + ", diffDate:" + diffDate);
 			for (int i = 0; i < bList.size() - 1; i++)
 			{
 				long lbegin = bList.get(i).getLeftClosedInterval().longValue();
