@@ -11,7 +11,7 @@
     <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
     <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
     <result column="loan_time" jdbcType="TIMESTAMP" property="loanTime" />
-    <result column="deadline" jdbcType="INT" property="deadline" />
+    <result column="deadline" jdbcType="INTEGER" property="deadline" />
     <result column="unit" jdbcType="CHAR" property="unit" />
     <result column="project_period" jdbcType="VARCHAR" property="projectPeriod" />
     <result column="first_price_loan" jdbcType="DECIMAL" property="firstPriceLoan" />
