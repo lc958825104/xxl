@@ -1,4 +1,4 @@
-package com.xxl.job.executor.core.config;
+package com.infincash.config;
 
 import javax.sql.DataSource;
 

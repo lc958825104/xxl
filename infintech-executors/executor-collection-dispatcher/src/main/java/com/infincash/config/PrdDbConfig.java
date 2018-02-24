@@ -1,4 +1,4 @@
-package com.xxl.job.executor.core.config;
+package com.infincash.config;
 
 import javax.sql.DataSource;
 
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Configuration
-@MapperScan(basePackages = {"com.infincash.statistics.risk.mapper.prd"}, sqlSessionFactoryRef = "sqlSessionFactoryPrd")
+@MapperScan(basePackages = {"com.infincash.cron.collection.mapper"}, sqlSessionFactoryRef = "sqlSessionFactoryPrd")
 public class PrdDbConfig {
 	static final String MAPPER_LOCATION = "classpath:mapping/prd/*.xml";  
 	

@@ -4,12 +4,12 @@ import static com.infincash.util.Jdk8DateUtils.dateSubstract;
 import static com.infincash.util.Jdk8DateUtils.getDateAfter;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -19,6 +19,7 @@ import com.infincash.cron.collection.table.TBizCollection;
 import com.infincash.cron.collection.table.TBizCollectionOverdueBucket;
 import com.xxl.job.core.log.XxlJobLogger;
 
+@Service
 public class CronCollectionServiceImpl implements CronCollectionService
 {
 	@Autowired

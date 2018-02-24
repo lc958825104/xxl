@@ -1,4 +1,4 @@
-package com.xxl.job.executor.core.config;
+package com.infincash.config;
 
 import com.xxl.job.core.executor.XxlJobExecutor;
 import org.slf4j.Logger;
