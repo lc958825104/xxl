@@ -14,7 +14,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Configuration
 @MapperScan(basePackages = {"com.infincash.cron.collection.mapper"}, sqlSessionFactoryRef = "sqlSessionFactoryPrd")
-public class PrdDbConfig {
+public class MybatisMapperConfig {
 	static final String MAPPER_LOCATION = "classpath:mapping/prd/*.xml";  
 	
     @Autowired
