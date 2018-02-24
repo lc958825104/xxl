@@ -2,20 +2,20 @@ package com.infincash.cron.collection.mapper;
 
 import java.util.List;
 
-import com.infincash.cron.collection.table.TBizCollectionRecord;
+import com.infincash.cron.collection.table.TBizCollection;
 
-public interface TBizCollectionRecordMapper {
-	List<TBizCollectionRecord> queryAll(String badDebtDay);
+public interface TBizCollectionMapper {
+	List<TBizCollection> queryAll(String badDebtDay);
 	
     int deleteByPrimaryKey(Long id);
 
-    int insert(TBizCollectionRecord record);
+    int insert(TBizCollection record);
 
-    int insertSelective(TBizCollectionRecord record);
+    int insertSelective(TBizCollection record);
 
-    TBizCollectionRecord selectByPrimaryKey(Long id);
+    TBizCollection selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(TBizCollectionRecord record);
+    int updateByPrimaryKeySelective(TBizCollection record);
 
-    int updateByPrimaryKey(TBizCollectionRecord record);
+    int updateByPrimaryKey(TBizCollection record);
 }
