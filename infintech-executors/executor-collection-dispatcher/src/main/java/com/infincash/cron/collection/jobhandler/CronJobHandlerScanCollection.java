@@ -1,12 +1,10 @@
-package com.infincash.cron.collection;
-
-import java.util.List;
+package com.infincash.cron.collection.jobhandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.infincash.statistics.risk.RiskService;
-import com.infincash.statistics.risk.table.prd.extend.RiskStatsDTO;
+import com.infincash.cron.collection.CronCollectionService;
+import com.infincash.cron.collection.InfintechException;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
@@ -22,22 +20,20 @@ import com.xxl.job.core.log.XxlJobLogger;
  *
  * @author xuxueli 2015-12-19 19:43:36
  */
-@JobHandler(value = "collectionDispatch")
+@JobHandler(value = "scanCollection")
 @Component
-public class CronJobHandler extends IJobHandler {
+public class CronJobHandlerScanCollection extends IJobHandler {
 	@Autowired
 	CronCollectionService service;
 
 	@Override
-	public ReturnT<String> execute(String param) throws Exception {
-		List<RiskStatsDTO> list = service.readCollection();
-		int res = service.assignCollection(list);
-		XxlJobLogger.log("assignCollection: " + res);
-		if(res < list.size()){			
-		    return FAIL;
+	public ReturnT<String> execute(String param) {
+		try {
+			service.assignCollection();
+			return SUCCESS;
+		} catch (InfintechException e) {
+			XxlJobLogger.log("assignCollection: " + e.getMessage());
+			return FAIL;
 		}
-		res = service.assignExemployeeCollection();
-		XxlJobLogger.log("assignCollection: " + res);
-		return SUCCESS;
 	}
 }

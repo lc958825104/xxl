@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infincash.cron.collection.mapper.TBizCollectionRecordMapper">
+  <resultMap id="BaseResultMap" type="com.infincash.cron.collection.table.TBizCollectionRecord">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="fk_t_project" jdbcType="VARCHAR" property="fkTProject" />
+    <result column="fk_t_user" jdbcType="VARCHAR" property="fkTUser" />
+    <result column="fk_system_user" jdbcType="VARCHAR" property="fkSystemUser" />
+    <result column="project_number" jdbcType="VARCHAR" property="projectNumber" />
+    <result column="user_login_name" jdbcType="VARCHAR" property="userLoginName" />
+    <result column="user_real_name" jdbcType="VARCHAR" property="userRealName" />
+    <result column="user_phone" jdbcType="VARCHAR" property="userPhone" />
+    <result column="loan_time" jdbcType="TIMESTAMP" property="loanTime" />
+    <result column="project_period" jdbcType="VARCHAR" property="projectPeriod" />
+    <result column="first_price_loan" jdbcType="DECIMAL" property="firstPriceLoan" />
+    <result column="repayment_date" jdbcType="TIMESTAMP" property="repaymentDate" />
+    <result column="overdue_day_count" jdbcType="SMALLINT" property="overdueDayCount" />
+    <result column="fk_t_biz_collection_overdue_bucket_interval_id" jdbcType="SMALLINT" property="fkTBizCollectionOverdueBucketIntervalId" />
+    <result column="collector_login_name" jdbcType="VARCHAR" property="collectorLoginName" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="full_repay_date" jdbcType="TIMESTAMP" property="fullRepayDate" />
+    <result column="last_collection_time" jdbcType="TIMESTAMP" property="lastCollectionTime" />
+    <result column="next_collection_time" jdbcType="TIMESTAMP" property="nextCollectionTime" />
+    <result column="histry_collection_count" jdbcType="SMALLINT" property="histryCollectionCount" />
+  </resultMap>
+
+  <select id="queryAll" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+      t1.id,
+      t1.number project_number,
+      t1.loan_time,
+      t1.deadline,
+      t1.unit,
+      t1.first_price_loan,
+      t2.repayment_date      
+    from t_project t1 inner join t_project_refund t2 on t1.id=t2.project_id and t1.status in ('7') 
+    where 
+      t1.loan_time > #{_parameter}
+  </select>
+ 
+  <insert id="insertSelective" parameterType="com.infincash.cron.collection.table.TBizCollectionRecord">
+    insert into t_biz_collection_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="fkTProject != null">
+        fk_t_project,
+      </if>
+      <if test="fkTUser != null">
+        fk_t_user,
+      </if>
+      <if test="fkSystemUser != null">
+        fk_system_user,
+      </if>
+      <if test="waitOrRecord != null">
+        wait_or_record,
+      </if>
+      <if test="projectNumber != null">
+        project_number,
+      </if>
+      <if test="userLoginName != null">
+        user_login_name,
+      </if>
+      <if test="userRealName != null">
+        user_real_name,
+      </if>
+      <if test="userPhone != null">
+        user_phone,
+      </if>
+      <if test="loanTime != null">
+        loan_time,
+      </if>
+      <if test="projectPeriod != null">
+        project_period,
+      </if>
+      <if test="firstPriceLoan != null">
+        first_price_loan,
+      </if>
+      <if test="repaymentDate != null">
+        repayment_date,
+      </if>
+      <if test="overdueDayCount != null">
+        overdue_day_count,
+      </if>
+      <if test="fkTBizCollectionOverdueBucketIntervalId != null">
+        fk_t_biz_collection_overdue_bucket_interval_id,
+      </if>
+      <if test="collectorLoginName != null">
+        collector_login_name,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+      <if test="fullRepayDate != null">
+        full_repay_date,
+      </if>
+      <if test="lastCollectionTime != null">
+        last_collection_time,
+      </if>
+      <if test="nextCollectionTime != null">
+        next_collection_time,
+      </if>
+      <if test="histryCollectionCount != null">
+        histry_collection_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="fkTProject != null">
+        #{fkTProject,jdbcType=VARCHAR},
+      </if>
+      <if test="fkTUser != null">
+        #{fkTUser,jdbcType=VARCHAR},
+      </if>
+      <if test="fkSystemUser != null">
+        #{fkSystemUser,jdbcType=VARCHAR},
+      </if>
+      <if test="waitOrRecord != null">
+        #{waitOrRecord,jdbcType=TINYINT},
+      </if>
+      <if test="projectNumber != null">
+        #{projectNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginName != null">
+        #{userLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealName != null">
+        #{userRealName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="loanTime != null">
+        #{loanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectPeriod != null">
+        #{projectPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPriceLoan != null">
+        #{firstPriceLoan,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentDate != null">
+        #{repaymentDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="overdueDayCount != null">
+        #{overdueDayCount,jdbcType=SMALLINT},
+      </if>
+      <if test="fkTBizCollectionOverdueBucketIntervalId != null">
+        #{fkTBizCollectionOverdueBucketIntervalId,jdbcType=SMALLINT},
+      </if>
+      <if test="collectorLoginName != null">
+        #{collectorLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
+      </if>
+      <if test="fullRepayDate != null">
+        #{fullRepayDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCollectionTime != null">
+        #{lastCollectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextCollectionTime != null">
+        #{nextCollectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="histryCollectionCount != null">
+        #{histryCollectionCount,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.cron.collection.table.TBizCollectionRecord">
+    update t_biz_collection_record
+    <set>
+      <if test="fkTProject != null">
+        fk_t_project = #{fkTProject,jdbcType=VARCHAR},
+      </if>
+      <if test="fkTUser != null">
+        fk_t_user = #{fkTUser,jdbcType=VARCHAR},
+      </if>
+      <if test="fkSystemUser != null">
+        fk_system_user = #{fkSystemUser,jdbcType=VARCHAR},
+      </if>
+      <if test="waitOrRecord != null">
+        wait_or_record = #{waitOrRecord,jdbcType=TINYINT},
+      </if>
+      <if test="projectNumber != null">
+        project_number = #{projectNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userLoginName != null">
+        user_login_name = #{userLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="userRealName != null">
+        user_real_name = #{userRealName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPhone != null">
+        user_phone = #{userPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="loanTime != null">
+        loan_time = #{loanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="projectPeriod != null">
+        project_period = #{projectPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="firstPriceLoan != null">
+        first_price_loan = #{firstPriceLoan,jdbcType=DECIMAL},
+      </if>
+      <if test="repaymentDate != null">
+        repayment_date = #{repaymentDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="overdueDayCount != null">
+        overdue_day_count = #{overdueDayCount,jdbcType=SMALLINT},
+      </if>
+      <if test="fkTBizCollectionOverdueBucketIntervalId != null">
+        fk_t_biz_collection_overdue_bucket_interval_id = #{fkTBizCollectionOverdueBucketIntervalId,jdbcType=SMALLINT},
+      </if>
+      <if test="collectorLoginName != null">
+        collector_login_name = #{collectorLoginName,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=TINYINT},
+      </if>
+      <if test="fullRepayDate != null">
+        full_repay_date = #{fullRepayDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastCollectionTime != null">
+        last_collection_time = #{lastCollectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="nextCollectionTime != null">
+        next_collection_time = #{nextCollectionTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="histryCollectionCount != null">
+        histry_collection_count = #{histryCollectionCount,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

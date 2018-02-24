@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.infincash.cron.collection.mapper.TBizCollectionOverdueBucketMapper">
+  <resultMap id="BaseResultMap" type="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="interval_id" jdbcType="SMALLINT" property="intervalId" />
+    <result column="left_closed_interval" jdbcType="SMALLINT" property="leftClosedInterval" />
+    <result column="t_system_role_id" jdbcType="VARCHAR" property="tSystemRoleId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, interval_id, left_closed_interval, t_system_role_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_biz_collection_overdue_bucket
+    where id = #{id,jdbcType=SMALLINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from t_biz_collection_overdue_bucket
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    insert into t_biz_collection_overdue_bucket (id, interval_id, left_closed_interval, 
+      t_system_role_id)
+    values (#{id,jdbcType=SMALLINT}, #{intervalId,jdbcType=SMALLINT}, #{leftClosedInterval,jdbcType=SMALLINT}, 
+      #{tSystemRoleId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    insert into t_biz_collection_overdue_bucket
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="intervalId != null">
+        interval_id,
+      </if>
+      <if test="leftClosedInterval != null">
+        left_closed_interval,
+      </if>
+      <if test="tSystemRoleId != null">
+        t_system_role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="intervalId != null">
+        #{intervalId,jdbcType=SMALLINT},
+      </if>
+      <if test="leftClosedInterval != null">
+        #{leftClosedInterval,jdbcType=SMALLINT},
+      </if>
+      <if test="tSystemRoleId != null">
+        #{tSystemRoleId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    update t_biz_collection_overdue_bucket
+    <set>
+      <if test="intervalId != null">
+        interval_id = #{intervalId,jdbcType=SMALLINT},
+      </if>
+      <if test="leftClosedInterval != null">
+        left_closed_interval = #{leftClosedInterval,jdbcType=SMALLINT},
+      </if>
+      <if test="tSystemRoleId != null">
+        t_system_role_id = #{tSystemRoleId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    update t_biz_collection_overdue_bucket
+    set interval_id = #{intervalId,jdbcType=SMALLINT},
+      left_closed_interval = #{leftClosedInterval,jdbcType=SMALLINT},
+      t_system_role_id = #{tSystemRoleId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    <id column="id" jdbcType="SMALLINT" property="id" />
+    <result column="interval_id" jdbcType="SMALLINT" property="intervalId" />
+    <result column="left_closed_interval" jdbcType="SMALLINT" property="leftClosedInterval" />
+    <result column="t_system_role_id" jdbcType="VARCHAR" property="tSystemRoleId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, interval_id, left_closed_interval, t_system_role_id
+  </sql>
+  <select id="queryAll" parameterType="java.lang.Short" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_biz_collection_overdue_bucket
+    order by interval_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Short">
+    delete from t_biz_collection_overdue_bucket
+    where id = #{id,jdbcType=SMALLINT}
+  </delete>
+  <insert id="insert" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    insert into t_biz_collection_overdue_bucket (id, interval_id, left_closed_interval, 
+      t_system_role_id)
+    values (#{id,jdbcType=SMALLINT}, #{intervalId,jdbcType=SMALLINT}, #{leftClosedInterval,jdbcType=SMALLINT}, 
+      #{tSystemRoleId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    insert into t_biz_collection_overdue_bucket
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="intervalId != null">
+        interval_id,
+      </if>
+      <if test="leftClosedInterval != null">
+        left_closed_interval,
+      </if>
+      <if test="tSystemRoleId != null">
+        t_system_role_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=SMALLINT},
+      </if>
+      <if test="intervalId != null">
+        #{intervalId,jdbcType=SMALLINT},
+      </if>
+      <if test="leftClosedInterval != null">
+        #{leftClosedInterval,jdbcType=SMALLINT},
+      </if>
+      <if test="tSystemRoleId != null">
+        #{tSystemRoleId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    update t_biz_collection_overdue_bucket
+    <set>
+      <if test="intervalId != null">
+        interval_id = #{intervalId,jdbcType=SMALLINT},
+      </if>
+      <if test="leftClosedInterval != null">
+        left_closed_interval = #{leftClosedInterval,jdbcType=SMALLINT},
+      </if>
+      <if test="tSystemRoleId != null">
+        t_system_role_id = #{tSystemRoleId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.infincash.cron.collection.table.TBizCollectionOverdueBucket">
+    update t_biz_collection_overdue_bucket
+    set interval_id = #{intervalId,jdbcType=SMALLINT},
+      left_closed_interval = #{leftClosedInterval,jdbcType=SMALLINT},
+      t_system_role_id = #{tSystemRoleId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=SMALLINT}
+  </update>
+</mapper>
