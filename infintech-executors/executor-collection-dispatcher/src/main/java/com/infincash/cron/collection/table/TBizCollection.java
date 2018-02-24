@@ -44,7 +44,7 @@ public class TBizCollection {
 
     private String updateBy;
 
-    private Byte state;
+    private int state;
 
     private Date fullRepayDate;
 
@@ -182,11 +182,11 @@ public class TBizCollection {
         this.updateBy = updateBy == null ? null : updateBy.trim();
     }
 
-    public Byte getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(Byte state) {
+    public void setState(int state) {
         this.state = state;
     }
 

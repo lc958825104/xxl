@@ -21,7 +21,7 @@
     <result column="collector_login_name" jdbcType="VARCHAR" property="collectorLoginName" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
-    <result column="state" jdbcType="TINYINT" property="state" />
+    <result column="state" jdbcType="TINYINT" property="state" javaType="int"/>
     <result column="full_repay_date" jdbcType="TIMESTAMP" property="fullRepayDate" />
     <result column="last_collection_time" jdbcType="TIMESTAMP" property="lastCollectionTime" />
     <result column="next_collection_time" jdbcType="TIMESTAMP" property="nextCollectionTime" />
@@ -69,20 +69,7 @@
   </select>
  
   <insert id="insertBatch" parameterType="com.infincash.cron.collection.table.TBizCollection">
-    insert into t_biz_collection_record
-    
-    "collectorLoginName": "HARRY",
-    "deadline": 1,
-    "firstPriceLoan": 1800000.00,
-    "fkSystemUser": "00101519376707262349",
-    "loanTime": 1511663497000,
-    "projectNumber": "GO20171125435400",
-    "repaymentDate": 1514217600000,
-    "unit": "1",
-    "userLoginName": "MF_qmjoqz",
-    "userPhone": "085934509604",
-    "userRealName": "Sandhi Trisnadi"
-    
+    insert into t_biz_collection
     <trim prefix="(" suffix=")" suffixOverrides=",">
         fk_t_project,
         fk_t_user,
@@ -94,102 +81,28 @@
         loan_time,
         project_period,
         first_price_loan,
-        repayment_date
-      </if>
-      <if test="collectorLoginName != null">
+        repayment_date,
+        overdue_day_count,
         collector_login_name,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="updateBy != null">
-        update_by,
-      </if>
-      <if test="state != null">
-        state,
-      </if>
-      <if test="fullRepayDate != null">
-        full_repay_date,
-      </if>
-      <if test="lastCollectionTime != null">
-        last_collection_time,
-      </if>
-      <if test="nextCollectionTime != null">
-        next_collection_time,
-      </if>
-      <if test="histryCollectionCount != null">
-        histry_collection_count,
-      </if>
+        state
     </trim>
     VALUES
     <foreach collection ="list" item="oneItem" index= "index" separator =",">
     (
-      <if test="fkTProject != null">
         #{oneItem.fkTProject,jdbcType=VARCHAR},
-      </if>
-      <if test="fkTUser != null">
         #{oneItem.fkTUser,jdbcType=VARCHAR},
-      </if>
-      <if test="fkSystemUser != null">
         #{oneItem.fkSystemUser,jdbcType=VARCHAR},
-      </if>
-      <if test="waitOrRecord != null">
-        #{oneItem.waitOrRecord,jdbcType=TINYINT},
-      </if>
-      <if test="projectNumber != null">
         #{oneItem.projectNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="userLoginName != null">
         #{oneItem.userLoginName,jdbcType=VARCHAR},
-      </if>
-      <if test="userRealName != null">
         #{oneItem.userRealName,jdbcType=VARCHAR},
-      </if>
-      <if test="userPhone != null">
         #{oneItem.userPhone,jdbcType=VARCHAR},
-      </if>
-      <if test="loanTime != null">
         #{oneItem.loanTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="projectPeriod != null">
         #{oneItem.projectPeriod,jdbcType=VARCHAR},
-      </if>
-      <if test="firstPriceLoan != null">
         #{oneItem.firstPriceLoan,jdbcType=DECIMAL},
-      </if>
-      <if test="repaymentDate != null">
         #{oneItem.repaymentDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="overdueDayCount != null">
         #{oneItem.overdueDayCount,jdbcType=SMALLINT},
-      </if>
-      <if test="fkTBizCollectionOverdueBucketIntervalId != null">
-        #{oneItem.fkTBizCollectionOverdueBucketIntervalId,jdbcType=SMALLINT},
-      </if>
-      <if test="collectorLoginName != null">
         #{oneItem.collectorLoginName,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null">
-        #{oneItem.updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateBy != null">
-        #{oneItem.updateBy,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null">
-        #{oneItem.state,jdbcType=TINYINT},
-      </if>
-      <if test="fullRepayDate != null">
-        #{oneItem.fullRepayDate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastCollectionTime != null">
-        #{oneItem.lastCollectionTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="nextCollectionTime != null">
-        #{oneItem.nextCollectionTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="histryCollectionCount != null">
-        #{oneItem.histryCollectionCount,jdbcType=SMALLINT},
-      </if>
+        #{oneItem.state,jdbcType=TINYINT}
     )
     </foreach >
   </insert>

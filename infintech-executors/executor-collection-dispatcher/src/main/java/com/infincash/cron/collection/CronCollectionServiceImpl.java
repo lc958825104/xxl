@@ -60,20 +60,23 @@ public class CronCollectionServiceImpl implements CronCollectionService
 				Map<String, Object> tmpMap = userList.get(a%cycle);
 				String userId = (String) tmpMap.get("user_id");
 				String userRealName = (String) tmpMap.get("real_name");
+				s.setState(1);
 				s.setFkSystemUser(userId);
 				s.setCollectorLoginName(userRealName);
 				long ll = dateSubstract(new Date(), s.getRepaymentDate());
 				s.setOverdueDayCount(Short.valueOf("" + ll));
 				String tmp = "";
 				tmp += s.getDeadline();
-				if("0".equals(s.getUnit().trim())) {
-					//天
+				if ("0".equals(s.getUnit().trim()))
+				{
+					// 天
 					tmp += " Day";
-					
-				} else if ("1".equals(s.getUnit().trim())) {
-					//月
+				} else if ("1".equals(s.getUnit().trim()))
+				{
+					// 月
 					tmp += " Month";
-				} else {
+				} else
+				{
 					throw new InfintechException("getUnit error! unit:" + s.getUnit());
 				}
 				s.setProjectPeriod(tmp);
