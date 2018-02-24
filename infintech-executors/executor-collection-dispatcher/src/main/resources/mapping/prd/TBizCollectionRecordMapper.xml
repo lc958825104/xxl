@@ -214,7 +214,7 @@
     </foreach >
   </insert>
   
-  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.cron.collection.table.TBizCollectionRecord">
+  <update id="updateByPrimaryKeySelective" parameterType="com.infincash.cron.collection.table.TBizCollection">
     update t_biz_collection_record
     <set>
       <if test="fkTProject != null">
