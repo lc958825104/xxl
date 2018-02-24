@@ -34,10 +34,13 @@
         t_u.login_name user_login_name, 
         t_ub.real_name user_real_name, 
         t_u.phone user_phone,
+        t_biz.user_id fk_t_user,
+        t_biz.fk_t_project,
         t_biz.loan_time, 
         t_biz.deadline, 
         t_biz.unit, 
-        t_biz.first_price_loan, t_biz.repayment_date
+        t_biz.first_price_loan, 
+        t_biz.repayment_date
     from
     (
         select
@@ -67,51 +70,31 @@
  
   <insert id="insertBatch" parameterType="com.infincash.cron.collection.table.TBizCollection">
     insert into t_biz_collection_record
+    
+    "collectorLoginName": "HARRY",
+    "deadline": 1,
+    "firstPriceLoan": 1800000.00,
+    "fkSystemUser": "00101519376707262349",
+    "loanTime": 1511663497000,
+    "projectNumber": "GO20171125435400",
+    "repaymentDate": 1514217600000,
+    "unit": "1",
+    "userLoginName": "MF_qmjoqz",
+    "userPhone": "085934509604",
+    "userRealName": "Sandhi Trisnadi"
+    
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="fkTProject != null">
         fk_t_project,
-      </if>
-      <if test="fkTUser != null">
         fk_t_user,
-      </if>
-      <if test="fkSystemUser != null">
         fk_system_user,
-      </if>
-      <if test="waitOrRecord != null">
-        wait_or_record,
-      </if>
-      <if test="projectNumber != null">
         project_number,
-      </if>
-      <if test="userLoginName != null">
         user_login_name,
-      </if>
-      <if test="userRealName != null">
         user_real_name,
-      </if>
-      <if test="userPhone != null">
         user_phone,
-      </if>
-      <if test="loanTime != null">
         loan_time,
-      </if>
-      <if test="projectPeriod != null">
         project_period,
-      </if>
-      <if test="firstPriceLoan != null">
         first_price_loan,
-      </if>
-      <if test="repaymentDate != null">
-        repayment_date,
-      </if>
-      <if test="overdueDayCount != null">
-        overdue_day_count,
-      </if>
-      <if test="fkTBizCollectionOverdueBucketIntervalId != null">
-        fk_t_biz_collection_overdue_bucket_interval_id,
+        repayment_date
       </if>
       <if test="collectorLoginName != null">
         collector_login_name,
@@ -141,9 +124,6 @@
     VALUES
     <foreach collection ="list" item="oneItem" index= "index" separator =",">
     (
-      <if test="id != null">
-        #{oneItem.id,jdbcType=BIGINT},
-      </if>
       <if test="fkTProject != null">
         #{oneItem.fkTProject,jdbcType=VARCHAR},
       </if>

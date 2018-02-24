@@ -17,6 +17,7 @@
     
     <properties>
         <guava.version>23.6-jre</guava.version>
+        <fastjson.version>1.2.46</fastjson.version>
     </properties>
 
 </project>

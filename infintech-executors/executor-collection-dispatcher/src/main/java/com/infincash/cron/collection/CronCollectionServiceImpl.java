@@ -62,11 +62,31 @@ public class CronCollectionServiceImpl implements CronCollectionService
 				String userRealName = (String) tmpMap.get("real_name");
 				s.setFkSystemUser(userId);
 				s.setCollectorLoginName(userRealName);
+				long ll = dateSubstract(new Date(), s.getRepaymentDate());
+				s.setOverdueDayCount(Short.valueOf("" + ll));
+				String tmp = "";
+				tmp += s.getDeadline();
+				if("0".equals(s.getUnit().trim())) {
+					//天
+					tmp += " Day";
+					
+				} else if ("1".equals(s.getUnit().trim())) {
+					//月
+					tmp += " Month";
+				} else {
+					throw new InfintechException("getUnit error! unit:" + s.getUnit());
+				}
+				s.setProjectPeriod(tmp);
 				a++;
 			}
 			//拼接List
 			resultList.addAll(list);
 		}
+		if (resultList.size()==0) {
+			throw new InfintechException("resultList empty!");
+		}
+		XxlJobLogger.log("new");
+		XxlJobLogger.log(resultList.get(0).toString());
 		collectionMapper.insertBatch(resultList);
 		
 	}

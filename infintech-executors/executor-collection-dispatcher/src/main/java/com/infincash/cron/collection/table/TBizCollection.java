@@ -3,6 +3,8 @@ package com.infincash.cron.collection.table;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.alibaba.fastjson.JSON;
+
 public class TBizCollection {
     private Long id;
 
@@ -23,6 +25,8 @@ public class TBizCollection {
     private Date loanTime;
 
     private Integer deadline;
+    
+    private String projectPeriod;
     
     private String unit;
 
@@ -237,4 +241,20 @@ public class TBizCollection {
 	{
 		this.unit = unit;
 	}
+	
+	public String getProjectPeriod()
+	{
+		return projectPeriod;
+	}
+
+	public void setProjectPeriod(String projectPeriod)
+	{
+		this.projectPeriod = projectPeriod;
+	}
+
+	@Override
+	public String toString() {
+		return JSON.toJSONString(this);
+	}
+
 }
