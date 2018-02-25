@@ -57,6 +57,7 @@ public class CronCollectionServiceImpl implements CronCollectionService
 			List<TBizCollection> list = entry.getValue();
 			int a = 0;
 			for (TBizCollection s : list) {
+				XxlJobLogger.log("a: "+a+", cycle: "+cycle+", a%cycle:" + a%cycle);
 				Map<String, Object> tmpMap = userList.get(a%cycle);
 				String userId = (String) tmpMap.get("user_id");
 				String userRealName = (String) tmpMap.get("real_name");
