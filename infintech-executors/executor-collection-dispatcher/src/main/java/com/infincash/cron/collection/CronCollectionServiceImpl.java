@@ -61,9 +61,9 @@ public class CronCollectionServiceImpl implements CronCollectionService
 			//FIXME 存量怎么办
 			List<TBizCollection> list = entry.getValue();
 			XxlJobLogger.log("\n\n``````````list size\n\n"+list.size());
-			for (int x=0; x<5; x++) {
-				XxlJobLogger.log("\n"+ x +"\n"+list.get(x).getProjectNumber());
-			}
+//			for (int x=0; x<5; x++) {
+//				XxlJobLogger.log("\n"+ x +"\n"+list.get(x).getProjectNumber());
+//			}
 			for (int a=0; a<list.size(); a++) {
 				//序列化深拷贝
 				TBizCollection s = JSON.parseObject(JSON.toJSONString(list.get(a)), TBizCollection.class); 
