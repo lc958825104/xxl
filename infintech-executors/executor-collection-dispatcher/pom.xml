@@ -20,7 +20,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
-
+    
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -105,6 +105,24 @@
 
     </dependencies>
 
+    <profiles>
+      <profile> <!-- 可以通过 -P ID 来激活 -->
+        <id>PRD</id> <!-- ID 标识符 -->
+        <properties>
+          <env>PRD</env> <!-- key 是 env, value 是 PROD -->
+        </properties>
+      </profile>
+      <profile> <!-- 可以通过 -P ID 来激活 -->
+        <id>TEST</id> <!-- ID 标识符 -->
+        <properties>
+          <env>TEST</env> <!-- key 是 env, value 是 TEST -->
+        </properties>
+        <activation>
+          <activeByDefault>true</activeByDefault> <!-- 默认激活 -->
+        </activation>
+      </profile>
+    </profiles>
+
     <build>
         <plugins>
             <!-- spring-boot-maven-plugin (提供了直接运行项目的插件：如果是通过parent方式继承spring-boot-starter-parent则不用此插件) -->
@@ -125,10 +143,29 @@
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
                 <version>1.3.2</version>
                 <configuration>
-                    <configurationFile>${basedir}/src/main/resources/generator/generatorConfig.xml</configurationFile>
+                    <configurationFile>${basedir}/src/main/resources/code-generator/generatorConfig.xml</configurationFile>
                     <overwrite>true</overwrite>
                     <verbose>true</verbose>
                 </configuration>
+            </plugin>
+            <plugin>
+              <artifactId>maven-assembly-plugin</artifactId> <!-- 官网给出的配置，没有配置 groupId，这里也不配置 -->
+              <version>2.4</version>
+              <executions>
+                <execution>
+                  <id>make-assembly</id> <!-- ID 标识，命名随意 -->
+                  <phase>package</phase> <!-- 绑定到 PACKAGE 生命周期阶段 -->
+                  <goals>
+                    <goal>single</goal>  <!-- 在 PACKAGE 生命周期阶段仅执行一次 -->
+                  </goals>
+                </execution>
+              </executions>
+              <configuration>
+                <descriptors>
+                  <descriptor>assembly.xml</descriptor> <!-- 自定义打包的配置文件 -->
+                </descriptors>
+                <appendAssemblyId>true</appendAssemblyId> <!-- 设为 FALSE, 防止 WAR 包名加入 assembly.xml 中的 ID -->
+              </configuration>
             </plugin>
         </plugins>
     </build>
