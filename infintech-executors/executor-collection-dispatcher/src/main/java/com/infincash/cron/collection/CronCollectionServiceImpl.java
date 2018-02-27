@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.infincash.cron.collection.mapper.TBizCollectionMapper;
@@ -31,17 +32,21 @@ public class CronCollectionServiceImpl implements CronCollectionService
 	@Override
 	public void assignCollection() throws InfintechException
 	{
-		//90天以上的是坏账
-		String badDebtDay = getDateAfter(-90);
-		List<TBizCollection> rList = collectionMapper.queryAll(badDebtDay);
-		if (rList == null || rList.size() == 0)
-		{
-			throw new InfintechException("recordMapper.queryAll(badDebtDay) empty! badDebtDay: " + badDebtDay);
-		}
 		List<TBizCollectionOverdueBucket> bList = bucketMapper.queryAll();
 		if (bList == null || bList.size() == 0)
 		{
 			throw new InfintechException("bucketMapper.queryAll() empty!");
+		}
+		Short sBadDebtLimit = bList.get(bList.size()-1).getLeftClosedInterval();
+		// 坏账的逾期天数
+		long badDebtLimit = Long.valueOf(sBadDebtLimit.toString());
+		badDebtLimit = 1 * (badDebtLimit - 1L);
+		XxlJobLogger.log("\n\n>> badDebtLimit: "+badDebtLimit);
+		String badDebtDay = getDateAfter(badDebtLimit);
+		List<TBizCollection> rList = collectionMapper.queryAll(badDebtDay);
+		if (rList == null || rList.size() == 0)
+		{
+			throw new InfintechException("recordMapper.queryAll(badDebtDay) empty! badDebtDay: " + badDebtDay);
 		}
 		Map<String, List<TBizCollection>> map = getWhichBucket(bList, rList);
 		List<TBizCollection> resultList = Lists.newLinkedList();
@@ -55,12 +60,16 @@ public class CronCollectionServiceImpl implements CronCollectionService
 			int cycle = userList.size();
 			//FIXME 存量怎么办
 			List<TBizCollection> list = entry.getValue();
-			int a = 0;
-			for (TBizCollection s : list) {
-				XxlJobLogger.log("a: "+a+", cycle: "+cycle+", a%cycle:" + a%cycle);
+			XxlJobLogger.log("\n\n``````````list size\n\n"+list.size());
+			for (int x=0; x<5; x++) {
+				XxlJobLogger.log("\n"+ x +"\n"+list.get(x).getProjectNumber());
+			}
+			for (int a=0; a<list.size(); a++) {
+				//序列化深拷贝
+				TBizCollection s = JSON.parseObject(JSON.toJSONString(list.get(a)), TBizCollection.class); 
 				Map<String, Object> tmpMap = userList.get(a%cycle);
-				String userId = (String) tmpMap.get("user_id");
-				String userRealName = (String) tmpMap.get("real_name");
+				String userId = new String((String) tmpMap.get("user_id"));
+				String userRealName = new String((String) tmpMap.get("real_name"));
 				s.setState(1);
 				s.setFkSystemUser(userId);
 				s.setCollectorLoginName(userRealName);
@@ -81,16 +90,12 @@ public class CronCollectionServiceImpl implements CronCollectionService
 					throw new InfintechException("getUnit error! unit:" + s.getUnit());
 				}
 				s.setProjectPeriod(tmp);
-				a++;
+				resultList.add(s);
 			}
-			//拼接List
-			resultList.addAll(list);
 		}
 		if (resultList.size()==0) {
 			throw new InfintechException("resultList empty!");
 		}
-		XxlJobLogger.log("new");
-		XxlJobLogger.log(resultList.get(0).toString());
 		collectionMapper.insertBatch(resultList);
 		
 	}
@@ -98,9 +103,11 @@ public class CronCollectionServiceImpl implements CronCollectionService
 	private Map<String, List<TBizCollection>> getWhichBucket(List<TBizCollectionOverdueBucket> bList, List<TBizCollection> rList)
 	{
 		// <k-v>:= <system_role_id - List<record>>
+//		XxlJobLogger.log("rList size:" + rList.size());
 		Map<String, List<TBizCollection>> listMap = Maps.newHashMap();
 		for (TBizCollection r : rList)
 		{
+//			TBizCollection r = JSON.parseObject(JSON.toJSONString(item), TBizCollection.class); 
 			Date d        = r.getRepaymentDate();
 			Date now      = new Date();
 			long diffDate = dateSubstract(now, d);
@@ -122,6 +129,8 @@ public class CronCollectionServiceImpl implements CronCollectionService
 					} else {
 						tmpList.add(r);
 					}
+					// 1对1关系, 找到以后就跳出
+					break;
 				}
 			}
 		}
