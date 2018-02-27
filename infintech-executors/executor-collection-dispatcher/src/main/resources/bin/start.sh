@@ -1,7 +1,9 @@
 #!/bin/bash
-
-SERVER_NAME='spring-vue'
-JAR_NAME='springboot-vue.jar'
+#################
+# 应用信息
+#################
+SERVER_NAME='executor-collection-dispatcher'
+JAR_NAME='executor-collection-dispatcher-1.0.0.jar'
 cd `dirname $0`
 BIN_DIR=`pwd`
 echo BIN_DIR: ${BIN_DIR}
@@ -9,7 +11,11 @@ cd ..
 DEPLOY_DIR=`pwd`
 echo DEPLOY_DIR: ${DEPLOY_DIR}
 CONF_DIR=$DEPLOY_DIR/lib/config
-# SERVER_PORT=`sed '/server.port/!d;s/.*=//' config/application.properties | tr -d '\r'`
+echo CONF_DIR: ${CONF_DIR}
+
+#################
+# 检查端口占用
+#################
 SERVER_PORT=`grep 'server.port' lib/config/application.properties | cut -d= -f2`
 echo SERVER_PORT: ${SERVER_PORT}
 PIDS=`ps -f | grep java | grep "$CONF_DIR" |awk '{print $2}'`
@@ -39,13 +45,21 @@ if [ -n "$SERVER_PORT" ]; then
     fi
 fi
 
-nohup java -jar $DEPLOY_DIR/lib/$JAR_NAME > $STDOUT_FILE &
+#################
+# 日志
+#################
+LOGS_DIR=$DEPLOY_DIR/logs
+echo LOGS_DIR: ${LOGS_DIR}
+if [ ! -d $LOGS_DIR ]; then
+    mkdir $LOGS_DIR
+fi
+STDOUT_FILE=$LOGS_DIR/startup.log
+echo STDOUT_FILE: ${STDOUT_FILE}
+echo "run: nohup java -jar $DEPLOY_DIR/lib/$JAR_NAME > $STDOUT_FILE 2>&1 &"
+cd $DEPLOY_DIR/lib
+echo `pwd`
+nohup java -jar $DEPLOY_DIR/lib/$JAR_NAME > $STDOUT_FILE 2>&1 &
 
-# LOGS_DIR=$DEPLOY_DIR/logs
-# if [ ! -d $LOGS_DIR ]; then
-#     mkdir $LOGS_DIR
-# fi
-# STDOUT_FILE=$LOGS_DIR/stdout.log
 
 # JAVA_OPTS=" -Djava.awt.headless=true -Djava.net.preferIPv4Stack=true "
 # JAVA_DEBUG_OPTS=""
