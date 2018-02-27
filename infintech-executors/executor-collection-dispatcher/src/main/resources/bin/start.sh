@@ -18,7 +18,7 @@ echo CONF_DIR: ${CONF_DIR}
 #################
 SERVER_PORT=`grep 'server.port' lib/config/application.properties | cut -d= -f2`
 echo SERVER_PORT: ${SERVER_PORT}
-PIDS=`ps -f | grep java | grep "$CONF_DIR" |awk '{print $2}'`
+echo "ps -ef | grep java | grep "$DEPLOY_DIR/lib/$JAR_NAME" |awk '{print $2}'"
 echo PIDS: ${PIDS}
 if [ "$1" = "status" ]; then	  
     if [ -n "$PIDS" ]; then
@@ -32,8 +32,7 @@ if [ "$1" = "status" ]; then
 fi
 
 if [ -n "$PIDS" ]; then
-    echo "ERROR: The $SERVER_NAME already started!"
-    echo "PID: $PIDS"
+    echo "ERROR: The $SERVER_NAME already started! the running server's PID: $PIDS"
     exit 1
 fi
 
