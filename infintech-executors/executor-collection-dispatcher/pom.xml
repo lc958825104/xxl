@@ -9,6 +9,7 @@
         <version>1.9.1-SNAPSHOT</version>
     </parent>
     <artifactId>executor-collection-dispatcher</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -124,6 +125,15 @@
     </profiles>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>mapping/**</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <!-- spring-boot-maven-plugin (提供了直接运行项目的插件：如果是通过parent方式继承spring-boot-starter-parent则不用此插件) -->
             <plugin>

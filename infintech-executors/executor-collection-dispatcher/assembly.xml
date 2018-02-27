@@ -10,51 +10,51 @@
   <id>${env}</id>
   
   <!-- =====================================================================
-       * 默认为 TRUE, 设为 FALSE, 防止将 ${project.finalName} 作为根目录打进 WAR 包
+       * 默认为 TRUE
        TRUE  结构: ${project.finalName}.war/${project.finalName}/WEB-INF
        FALSE 结构: ${project.finalName}.war/WEB-INF 
        ===================================================================== -->
-  <includeBaseDirectory>false</includeBaseDirectory>
+  <includeBaseDirectory>true</includeBaseDirectory>
   
   <!-- 设置为 WAR 包格式 -->
   <formats>
-    <format>jar</format>
+    <format>tar.gz</format>
   </formats>
   
   <fileSets>
     <!-- =================================================
-         target/classes 下的文件输出到 WEB-INF/classes
+         target/xxx.jar 下的文件输出到 tar.gz中的jar包
          ================================================= -->
     <fileSet>
-        <directory>${project.build.outputDirectory}</directory> 
-        <outputDirectory>BOOT-INF/classes</outputDirectory>
-        <!-- =================================================
-             target/classes/conf/*.properties 排除
-             ================================================= -->
-        <excludes>
-            <exclude>conf/**</exclude>
-            <exclude>code-generator/**</exclude>
-        </excludes> 
+        <directory>target</directory> 
+        <outputDirectory>lib</outputDirectory>
+        <includes>
+            <include>*.jar</include>
+        </includes>
     </fileSet>
     <fileSet>
-      <directory>${project.build.outputDirectory}/conf/${env}</directory>
-      <outputDirectory>BOOT-INF/classes/</outputDirectory>
+        <directory>src/main/resources/bin</directory>
+        <outputDirectory>bin</outputDirectory>
+        <fileMode>0755</fileMode>
     </fileSet>
-    <!-- 将 webapp 下的文件输出到 WAR 包 
+    <!-- =================================================
+         jar包同级的config
+         ================================================= -->
     <fileSet>
-      <directory>${project.basedir}/src/main/webapp</directory>
-      <outputDirectory>/</outputDirectory>
+      <directory>src/main/resources/conf/${env}</directory>
+      <outputDirectory>lib/config</outputDirectory>
+      <fileMode>0644</fileMode>
     </fileSet>
-    -->
+    <!-- =================================================
+         * 生成logs目录, 并配置读写权限
+         =================================================-->
+    <fileSet>
+      <directory>src/main/resources</directory>
+      <outputDirectory>logs</outputDirectory>
+      <fileMode>0755</fileMode>
+      <excludes>
+        <exclude>**/*</exclude>
+      </excludes>
+    </fileSet>
   </fileSets>
-  <!-- 将项目依赖的JAR包输出到 WEB-INF/lib -->
-  <dependencySets>
-    <dependencySet>
-        <!-- ==========================================================================
-             true是默认值，本次构建出来的jar包属于当前这个dependencySet，一起打进最终的jar包 
-             ========================================================================== -->
-        <useProjectArtifact>false</useProjectArtifact>
-        <outputDirectory>BOOT-INF/lib</outputDirectory>
-    </dependencySet>
-  </dependencySets>
 </assembly>
