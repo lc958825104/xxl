@@ -40,7 +40,7 @@ public class CronCollectionServiceImpl implements CronCollectionService
 		Short sBadDebtLimit = bList.get(bList.size()-1).getLeftClosedInterval();
 		// 坏账的逾期天数
 		long badDebtLimit = Long.valueOf(sBadDebtLimit.toString());
-		badDebtLimit = 1 * (badDebtLimit - 1L);
+		badDebtLimit = -1 * (badDebtLimit - 1L);
 		XxlJobLogger.log("\n\n>> badDebtLimit: "+badDebtLimit);
 		String badDebtDay = getDateAfter(badDebtLimit);
 		List<TBizCollection> rList = collectionMapper.queryAll(badDebtDay);
