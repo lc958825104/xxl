@@ -53,7 +53,7 @@
           t1.first_price_loan,
           t2.repayment_date      
         from t_project t1 inner join t_project_refund t2 on t1.id=t2.project_id and t1.status in ('7') 
-        where t1.loan_time >  #{_parameter}
+        where t2.repayment_date >  #{_parameter}
     ) t_biz
     inner join
     t_user t_u ON t_u.user_id = t_biz.user_id
