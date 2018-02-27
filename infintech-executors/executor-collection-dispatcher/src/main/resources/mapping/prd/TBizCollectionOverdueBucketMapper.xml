@@ -11,6 +11,6 @@
   <select id="queryAll" resultMap="t_biz_collection_overdue_bucketMap">
     select 
     id, interval_id, left_closed_interval, t_system_role_id
-    from t_biz_collection_overdue_bucket
+    from t_biz_collection_overdue_bucket order by interval_id
   </select>
 </mapper>
