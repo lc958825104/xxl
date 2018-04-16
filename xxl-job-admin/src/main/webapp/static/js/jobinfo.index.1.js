@@ -459,4 +459,39 @@ $(function() {
         return glueTypeTitle;
     }
 
+    $("body").on("click", ".cron-expression-test", function () {
+        var expression = $(this).closest("form").find("input[name=jobCron]").val();
+		console.log("expression", expression);
+		if (expression.length == "") {
+            layer.open({
+                title: I18n.system_tips,
+                btn: [ I18n.system_ok ],
+                content: ( I18n.jobinfo_field_cron_unvalid ),
+                icon: '2'
+            });
+            return;
+		}
+        $.post(base_url + "/cron-preview", {expression: expression}, function(data, status) {
+            if (data.code == "200") {
+            	var content = "<ul>"
+            	for (i=0; i < data.content.length; i++){
+            		content += "<li>"+data.content[i]+"</li>";
+				}
+				content += "</ul>";
+                layer.open({
+                    title: I18n.system_tips ,
+                    btn: [ I18n.system_ok ],
+                    content: content || "error",
+                    icon: '1'
+                });
+            } else {
+                layer.open({
+                    title: I18n.system_tips ,
+                    btn: [ I18n.system_ok ],
+                    content: (data.msg || I18n.jobinfo_field_cron_unvalid ),
+                    icon: '2'
+                });
+            }
+        });
+    })
 });
