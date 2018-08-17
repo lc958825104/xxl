@@ -2,6 +2,7 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.controller.interceptor.PermissionInterceptor;
+import com.xxl.job.admin.core.LoginEntity;
 import com.xxl.job.admin.core.util.PropertiesUtil;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
@@ -26,6 +27,8 @@ public class IndexController {
 
 	@Resource
 	private XxlJobService xxlJobService;
+	@Resource
+	private LoginEntity loginEntity;
 
 	@RequestMapping("/")
 	public String index(Model model) {
@@ -58,15 +61,15 @@ public class IndexController {
 	public ReturnT<String> loginDo(HttpServletRequest request, HttpServletResponse response, String userName, String password, String ifRemember){
 		if (!PermissionInterceptor.ifLogin(request)) {
 			if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password)
-					&& PropertiesUtil.getString("xxl.job.login.username").equals(userName)
-					&& PropertiesUtil.getString("xxl.job.login.password").equals(password)) {
+					&& loginEntity.getLoginUserName().equals(userName)
+					&& loginEntity.getLoginPassword().equals(password)) {
 				boolean ifRem = false;
 				if (StringUtils.isNotBlank(ifRemember) && "on".equals(ifRemember)) {
 					ifRem = true;
 				}
 				PermissionInterceptor.login(response, ifRem);
 			} else {
-				return new ReturnT<String>(500, "账号或密码错误");
+				return new ReturnT<String>(500, "账号或密码错误, Inner User: "+loginEntity.getLoginUserName() );
 			}
 		}
 		return ReturnT.SUCCESS;
