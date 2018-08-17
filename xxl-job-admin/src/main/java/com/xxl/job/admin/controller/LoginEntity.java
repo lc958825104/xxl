@@ -1,7 +1,9 @@
-package com.xxl.job.admin.core;
+package com.xxl.job.admin.controller;
 
 import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Component;
+
 
 /**
  * Created by Rock on 2018-08-17.
