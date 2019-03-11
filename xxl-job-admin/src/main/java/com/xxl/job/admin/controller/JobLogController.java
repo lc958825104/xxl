@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.controller.annotation.PermessionLimit;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
@@ -140,6 +141,7 @@ public class JobLogController {
 
 	@RequestMapping("/logKill")
 	@ResponseBody
+	@PermessionLimit(write=true)
 	public ReturnT<String> logKill(int id){
 		// base check
 		XxlJobLog log = xxlJobLogDao.load(id);
@@ -174,6 +176,7 @@ public class JobLogController {
 
 	@RequestMapping("/clearLog")
 	@ResponseBody
+	@PermessionLimit(write=true)
 	public ReturnT<String> clearLog(int jobGroup, int jobId, int type){
 
 		Date clearBeforeTime = null;
