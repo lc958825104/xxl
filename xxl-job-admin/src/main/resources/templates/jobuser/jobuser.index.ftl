@@ -35,12 +35,9 @@
                             <table id="joblog_list" class="table table-bordered table-striped display" width="100%" >
                                 <thead>
                                 <tr>
-                                <#--<th name="id" >ID</th>-->
                                     <th name="order" >${I18n.user_login_username}</th>
-                                <#--<th name="appName" >${I18n.jobgroup_field_order}</th>-->
                                     <th name="title" >${I18n.user_authority}</th>
                                     <th name="addressType" >${I18n.user_last_login_time}</th>
-                                <#--<th name="registryList" >OnLine ${I18n.jobgroup_field_registryList}</th>-->
                                     <th name="operate" >${I18n.system_opt}</th>
                                 </tr>
                                 </thead>
@@ -48,25 +45,10 @@
 								<#if list?exists && list?size gt 0>
 								<#list list as user>
 									<tr>
-                                    <#--<td>${group.id}</td>-->
                                         <td>${user.userName}</td>
-                                    <#--<td>${group.appName}</td>-->
                                         <td><#if user.authority>${I18n.user_authority_1}<#else>${I18n.user_authority_0}</#if></td>
                                         <td>${user.lastLoginTime}</td>
-                                    <#--<td>-->
-                                    <#--<#if group.registryList?exists>-->
-                                    <#--<#list group.registryList as item>-->
-                                    <#--<span class="badge bg-green" title="${item}" >-->
-                                    <#--<#if item?length gt 35>-->
-                                    <#--${item?substring(0, 35)}...-->
-                                    <#--<#else>-->
-                                    <#--${item}-->
-                                    <#--</#if>-->
-                                    <#--</span>-->
-                                    <#--<br>-->
-                                    <#--</#list>-->
-                                    <#--</#if>-->
-                                    <#--</td>-->
+
                                         <td>
                                             <button class="btn btn-warning btn-xs update"
                                                     userName="${user.userName}"
@@ -130,7 +112,7 @@
         <div class="modal-dialog ">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" >${I18n.jobgroup_edit}</h4>
+                    <h4 class="modal-title" >${I18n.user_update}</h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal form" role="form" >
