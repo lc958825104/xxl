@@ -5,6 +5,7 @@
 CREATE database if NOT EXISTS `xxl_job` default character set utf8 collate utf8_general_ci;
 use `xxl_job`;
 
+SET NAMES UTF8;
 
 CREATE TABLE `xxl_job_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
