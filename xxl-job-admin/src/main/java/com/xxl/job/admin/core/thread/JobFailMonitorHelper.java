@@ -105,8 +105,8 @@ public class JobFailMonitorHelper {
 	public void toStop(){
 		toStop = true;
 		// interrupt and wait
-		try {
-			monitorThread.interrupt();
+        monitorThread.interrupt();
+        try {
 			monitorThread.join();
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
