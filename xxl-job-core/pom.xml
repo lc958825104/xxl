@@ -52,6 +52,14 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/top.jfunc.common/utils -->
+		<dependency>
+			<groupId>top.jfunc.common</groupId>
+			<artifactId>utils</artifactId>
+			<version>1.8.2.3</version>
+		</dependency>
+
+
 	</dependencies>
 
 </project>

@@ -105,8 +105,8 @@ public class JobFailMonitorHelper {
 	public void toStop(){
 		toStop = true;
 		// interrupt and wait
-		monitorThread.interrupt();
-		try {
+        monitorThread.interrupt();
+        try {
 			monitorThread.join();
 		} catch (InterruptedException e) {
 			logger.error(e.getMessage(), e);
@@ -116,7 +116,6 @@ public class JobFailMonitorHelper {
 
 	// ---------------------- alarm ----------------------
 
-	// email alarm template
 	private static final String mailBodyTemplate = "<h5>" + I18nUtil.getString("jobconf_monitor_detail") + "：</span>" +
 			"<table border=\"1\" cellpadding=\"3\" style=\"border-collapse:collapse; width:80%;\" >\n" +
 			"   <thead style=\"font-weight: bold;color: #ffffff;background-color: #ff8c00;\" >" +
@@ -141,8 +140,6 @@ public class JobFailMonitorHelper {
 
 	/**
 	 * fail alarm
-	 *
-	 * @param jobLog
 	 */
 	private boolean failAlarm(XxlJobInfo info, XxlJobLog jobLog){
 		boolean alarmResult = true;

@@ -4,6 +4,7 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.ExecutorBiz;
 import com.xxl.job.core.biz.impl.ExecutorBizImpl;
 import com.xxl.job.core.handler.IJobHandler;
+import com.xxl.job.core.handler.annotation.JobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
 import com.xxl.job.core.thread.ExecutorRegistryThread;
 import com.xxl.job.core.thread.JobLogFileCleanThread;
@@ -21,6 +22,9 @@ import com.xxl.rpc.util.IpUtil;
 import com.xxl.rpc.util.NetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.jfunc.common.utils.BeanUtil;
+import top.jfunc.common.utils.ClassUtil;
+import top.jfunc.common.utils.StrUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -223,18 +227,49 @@ public class XxlJobExecutor  {
     }
 
 
-    // ---------------------- job handler repository ----------------------
+    /// ---------------------- job handler repository ----------------------
+
     private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
-    public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
-        logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
-        return jobHandlerRepository.put(name, jobHandler);
-    }
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
     }
 
+    public static IJobHandler registJobHandler(String name, IJobHandler jobHandler){
+        logger.info(">>>>>>>>>>> xxl-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
+        return jobHandlerRepository.put(name, jobHandler);
+    }
 
-    // ---------------------- job thread repository ----------------------
+    /**
+     * 根据包扫描结果注册{@link IJobHandler}，包下所有{@link IJobHandler}子类都扫描进
+     */
+    public static void registJobHandler(String... packages){
+        for (String onePackage : packages) {
+            Set<Class<?>> jobHandlerClasses = ClassUtil.scanPackageBySuper(onePackage, true, IJobHandler.class);
+            for (Class<?> jobHandlerClass : jobHandlerClasses) {
+                String name = determineHandlerName(jobHandlerClass);
+                IJobHandler jobHandler = BeanUtil.newInstance(jobHandlerClass);
+                registJobHandler(name , jobHandler);
+            }
+        }
+    }
+
+    /**
+     * 名字默认是类名首字母小写，可以使用{@link JobHandler}修改名称
+     */
+    private static String determineHandlerName(Class<?> jobHandlerClass) {
+        String name = StrUtil.lowerFirst(jobHandlerClass.getSimpleName());
+        if(jobHandlerClass.isAnnotationPresent(JobHandler.class)){
+            String value = jobHandlerClass.getAnnotation(JobHandler.class).value();
+            if(!"".equals(value)){
+                name = value;
+            }
+        }
+        return name;
+    }
+
+
+    /// ---------------------- job thread repository ----------------------
+
     private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
         JobThread newJobThread = new JobThread(jobId, handler);
