@@ -43,11 +43,11 @@ public class JobGroupController {
 
 	@RequestMapping("/pageList")
 	@ResponseBody
-	public Map<String, Object> pageList() {
+	public ReturnT pageList() {
 		Map<String, Object> maps = new HashMap<String, Object>();
 		List<XxlJobGroup> list = xxlJobGroupDao.findAll();
 		maps.put("data", list);
-		return maps;
+		return new ReturnT<Object>(maps);
 	}
 
 	@RequestMapping("/save")
