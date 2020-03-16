@@ -13,6 +13,7 @@ import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.enums.RegistryConfig;
 import com.xxl.job.core.handler.IJobHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -166,6 +167,7 @@ public class AdminBizImpl implements AdminBiz {
 
     private void freshGroupRegistryInfo(RegistryParam registryParam){
         // Under consideration, prevent affecting core tables
+        xxlJobGroupDao.refreshGroupByApp(registryParam.getRegistryKey(), RegistryConfig.DEAD_TIMEOUT);
     }
 
 }
