@@ -146,7 +146,16 @@ public class JobScheduleHelper {
                             logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
                         }
                     } finally {
-
+                        // close PreparedStatement
+                        if (null != preparedStatement) {
+                            try {
+                                preparedStatement.close();
+                            } catch (SQLException e) {
+                                if (!scheduleThreadToStop) {
+                                    logger.error(e.getMessage(), e);
+                                }
+                            }
+                        }
                         // commit
                         if (conn != null) {
                             try {
@@ -165,17 +174,6 @@ public class JobScheduleHelper {
                             }
                             try {
                                 conn.close();
-                            } catch (SQLException e) {
-                                if (!scheduleThreadToStop) {
-                                    logger.error(e.getMessage(), e);
-                                }
-                            }
-                        }
-
-                        // close PreparedStatement
-                        if (null != preparedStatement) {
-                            try {
-                                preparedStatement.close();
                             } catch (SQLException e) {
                                 if (!scheduleThreadToStop) {
                                     logger.error(e.getMessage(), e);
