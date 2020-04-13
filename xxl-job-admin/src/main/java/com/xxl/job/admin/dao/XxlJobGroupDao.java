@@ -33,7 +33,7 @@ public interface XxlJobGroupDao {
      * @param timeout 超时时间
      * @return 影响行数
      */
-    @Update("UPDATE xxl_job_group gp\n" + "JOIN (\n" + "\tSELECT registry_key\n"
+    @Update("UPDATE xxl_job_group gp\n" + "LEFT JOIN (\n" + "\tSELECT registry_key\n"
         + "\t\t,GROUP_CONCAT(DISTINCT registry_value ORDER BY registry_value SEPARATOR ',') address_list\n"
         + "\tFROM `xxl_job_registry` \n" + "\tWHERE registry_group='EXECUTOR' AND registry_key=#{appName}\n"
         + "\t\tAND update_time>= DATE_ADD(NOW(),INTERVAL -#{timeout} SECOND)\n"
