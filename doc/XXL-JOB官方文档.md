@@ -494,7 +494,7 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
 调度中心配置内容说明：
 
     ### 调度中心JDBC链接：链接地址请保持和 2.1章节 所创建的调度数据库的地址一致
-    spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?Unicode=true&characterEncoding=UTF-8
+    spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai
     spring.datasource.username=root
     spring.datasource.password=root_pwd
     spring.datasource.driver-class-name=com.mysql.jdbc.Driver
@@ -563,7 +563,7 @@ docker run -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/x
 * 配置项参考文件：/xxl-job/xxl-job-admin/src/main/resources/application.properties
 * 如需自定义 JVM内存参数 等配置，可通过 "-e JAVA_OPTS" 指定，参数格式 JAVA_OPTS="-Xmx512m" ；
 */
-docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?Unicode=true&characterEncoding=UTF-8" -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin:{指定版本}
+docker run -e PARAMS="--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai" -p 8080:8080 -v /tmp:/data/applogs --name xxl-job-admin  -d xuxueli/xxl-job-admin:{指定版本}
 ```
 
 
@@ -1959,6 +1959,10 @@ data: post-data
 - 21、执行器UI交互优化,移除冗余order属性；
 - 22、执行备注消息长度限制，修复数据超长无法存储导致导致回调失败的问题；
 注意：XxlJobSpringExecutor组件个别字段调整：“appName” 调整为 “appname” ，升级时该组件时需要注意；
+
+### 7.31 版本 v2.2.1 Release Notes[迭代中]
+- 1、[迭代中] 新增任务属性 "XxlJobContent" ，统一维护任务上下文信息，方便运行时存取任务相关信息；
+
 
 ### TODO LIST
 - 1、任务分片路由：分片采用一致性Hash算法计算出尽量稳定的分片顺序，即使注册机器存在波动也不会引起分批分片顺序大的波动；目前采用IP自然排序，可以满足需求，待定；
