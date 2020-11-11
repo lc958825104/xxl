@@ -26,6 +26,12 @@
 			<artifactId>gson</artifactId>
 			<version>${gson.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>top.jfunc.common</groupId>
+			<artifactId>utils</artifactId>
+			<version>1.8.3.5</version>
+		</dependency>
+
 
 		<!-- ********************** plugin ********************** -->
 		<!-- groovy-all -->
