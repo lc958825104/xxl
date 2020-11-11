@@ -3,6 +3,7 @@ package com.xxl.job.executor.sample.frameless;
 import com.xxl.job.executor.sample.frameless.config.FrameLessXxlJobConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.jfunc.common.thread.HoldProcessor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,21 +19,26 @@ public class FramelessApplication {
             // start
             FrameLessXxlJobConfig.getInstance().initXxlJobExecutor();
 
-            // Blocks until interrupted
-            while (true) {
-                try {
-                    TimeUnit.HOURS.sleep(1);
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
+            waitHere();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-            // destory
-            FrameLessXxlJobConfig.getInstance().destoryXxlJobExecutor();
         }
 
+    }
+
+    private static void waitHere() {
+        final HoldProcessor holdProcessor = new HoldProcessor();
+        holdProcessor.startAwait();
+        logger.info("程序开始等待");
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run() {
+                logger.info("收到kill 信号，执行清理程序");
+                //在关闭的时候释放资源
+                FrameLessXxlJobConfig.getInstance().destoryXxlJobExecutor();
+                holdProcessor.stopAwait();
+            }
+        });
     }
 
 }
