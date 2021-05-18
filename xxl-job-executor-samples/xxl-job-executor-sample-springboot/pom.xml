@@ -43,10 +43,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- xxl-job-core -->
+        <!-- xxl-job-spring-boot-starter -->
         <dependency>
             <groupId>com.xuxueli</groupId>
-            <artifactId>xxl-job-core</artifactId>
+            <artifactId>xxl-job-spring-boot-starter</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

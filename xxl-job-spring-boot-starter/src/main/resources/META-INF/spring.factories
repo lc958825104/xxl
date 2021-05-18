@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.xxl.job.spring.config.XxlJobAdminProperties,\
+com.xxl.job.spring.config.XxlJobExecutorProperties,\
+com.xxl.job.spring.config.XxlJobAutoConfiguration
