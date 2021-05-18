@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: demo-app
+
+xxl-job:
+  admin:
+    addresses: http://localhost:8080/xxl-job-admin
+  executor:
+    preferred-networks:
+    - 192.168.50
+
+
+logging:
+  level:
+    com.xxl.job: debug
