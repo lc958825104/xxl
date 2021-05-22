@@ -30,6 +30,8 @@
 		<spring.version>5.3.3</spring.version>
 		<spring-boot.version>2.4.2</spring-boot.version>
 
+		<solon.version>1.4.3</solon.version>
+
 		<mybatis-spring-boot-starter.version>2.1.4</mybatis-spring-boot-starter.version>
 		<mysql-connector-java.version>8.0.23</mysql-connector-java.version>
 
