@@ -1,5 +1,6 @@
 package com.xxl.job.core.executor.impl;
 
+import com.xxl.job.core.executor.XxlJobExecutor;
 import org.noear.solon.annotation.Bean;
 import org.noear.solon.annotation.Configuration;
 import org.noear.solon.annotation.Inject;
@@ -7,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * auto config XxlJobExecutor
+ *
  * @author noear 2021/5/22 created
  */
 @Configuration
@@ -38,7 +41,7 @@ public class XxlJobSolonAutoConfig {
     private int logRetentionDays;
 
     @Bean
-    public XxlJobSolonExecutor xxlJobExecutor() {
+    public XxlJobExecutor xxlJobExecutor() {
         logger.info(">>>>>>>>>>> xxl-job config init.");
 
         XxlJobSolonExecutor executor = new XxlJobSolonExecutor();

@@ -35,7 +35,7 @@
         <!-- spring-boot-starter-web (spring-webmvc + tomcat) -->
         <dependency>
             <groupId>org.noear</groupId>
-            <artifactId>solon-api</artifactId>
+            <artifactId>solon</artifactId>
         </dependency>
 
         <dependency>

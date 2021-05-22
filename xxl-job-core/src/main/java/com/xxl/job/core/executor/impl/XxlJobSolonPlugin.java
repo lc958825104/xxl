@@ -17,13 +17,16 @@ import java.lang.reflect.Method;
 public class XxlJobSolonPlugin implements Plugin, BeanExtractor<XxlJob> {
     @Override
     public void start(SolonApp app) {
+        //add extractor for bean method
         Aop.context().beanExtractorAdd(XxlJob.class, this);
-        Aop.context().beanMake(XxlJobSolonAutoConfig.class);
 
-        XxlJobSolonExecutor executor = Aop.get(XxlJobSolonExecutor.class);
+        Aop.context().beanMake(XxlJobSolonAutoConfig.class);
 
         Aop.beanOnloaded(() -> {
             try {
+                //
+                XxlJobExecutor executor = Aop.get(XxlJobExecutor.class);
+
                 executor.start();
             } catch (Exception e) {
                 throw new RuntimeException(e);

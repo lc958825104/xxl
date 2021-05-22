@@ -15,7 +15,7 @@ public class XxlJobSolonExecutor extends XxlJobExecutor {
 
     @Override
     public void start() throws Exception {
-        // refresh GlueFactory
+        // refresh GlueFactory (add solon inject)
         GlueFactory.refreshInstance(2);
 
         // super start
