@@ -32,7 +32,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- spring-boot-starter-web (spring-webmvc + tomcat) -->
+        <!-- solon-api (solon-api + jlhttp) -->
         <dependency>
             <groupId>org.noear</groupId>
             <artifactId>solon-api</artifactId>
