@@ -1,5 +1,6 @@
 package com.xxl.job.core.glue;
 
+import com.xxl.job.core.glue.impl.SolonGlueFactory;
 import com.xxl.job.core.glue.impl.SpringGlueFactory;
 import com.xxl.job.core.handler.IJobHandler;
 import groovy.lang.GroovyClassLoader;
@@ -16,7 +17,6 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class GlueFactory {
 
-
 	private static GlueFactory glueFactory = new GlueFactory();
 	public static GlueFactory getInstance(){
 		return glueFactory;
@@ -26,6 +26,8 @@ public class GlueFactory {
 			glueFactory = new GlueFactory();
 		} else if (type == 1) {
 			glueFactory = new SpringGlueFactory();
+		} else if (type == 2) {
+			glueFactory = new SolonGlueFactory();
 		}
 	}
 

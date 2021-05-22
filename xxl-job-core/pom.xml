@@ -43,6 +43,14 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- solon -->
+		<dependency>
+			<groupId>org.noear</groupId>
+			<artifactId>solon</artifactId>
+			<version>${solon.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<!-- ********************** base ********************** -->
 		<!-- slf4j -->
 		<dependency>
