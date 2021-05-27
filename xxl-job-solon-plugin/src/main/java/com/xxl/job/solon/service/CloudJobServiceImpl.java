@@ -12,8 +12,13 @@ public class CloudJobServiceImpl implements CloudJobService {
     public static final CloudJobService instance = new CloudJobServiceImpl();
 
     @Override
-    public boolean register(String name, Handler handler) {
+    public boolean register(String name, String description, Handler handler) {
         XxlJobExecutor.registJobHandler(name, new CloudJobHanderProxy(handler));
         return true;
+    }
+
+    @Override
+    public boolean isRegistered(String name) {
+        return XxlJobExecutor.loadJobHandler(name) != null;
     }
 }
