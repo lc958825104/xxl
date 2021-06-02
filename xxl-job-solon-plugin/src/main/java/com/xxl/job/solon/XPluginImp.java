@@ -4,10 +4,7 @@ import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import org.noear.solon.SolonApp;
 import org.noear.solon.cloud.CloudManager;
-import org.noear.solon.cloud.annotation.CloudJob;
 import com.xxl.job.solon.service.CloudJobServiceImpl;
-import org.noear.solon.cloud.impl.CloudJobBuilder;
-import org.noear.solon.cloud.impl.CloudJobExtractor;
 import org.noear.solon.core.Aop;
 import org.noear.solon.core.Plugin;
 
@@ -22,14 +19,13 @@ public class XPluginImp implements Plugin {
             return;
         }
 
-        //register Job Service
+        //注册Job服务
         CloudManager.register(CloudJobServiceImpl.instance);
 
-        //add extractor for bean method
+        //注册构建器和提取器
         Aop.context().beanExtractorAdd(XxlJob.class, new XxlJobExtractor());
-        Aop.context().beanExtractorAdd(CloudJob.class, new CloudJobExtractor());
-        Aop.context().beanBuilderAdd(CloudJob.class,new CloudJobBuilder());
 
+        //构建自动配置
         Aop.context().beanMake(XxlJobAutoConfig.class);
 
         Aop.beanOnloaded(() -> {
