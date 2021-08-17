@@ -26,6 +26,15 @@ import java.util.Map;
 public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
     private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
 
+    /**
+     * Prefix for system property placeholders: "${".
+     */
+    public static final String PLACEHOLDER_PREFIX = "${";
+
+    /**
+     * Suffix for system property placeholders: "}".
+     */
+    public static final String PLACEHOLDER_SUFFIX = "}";
 
     // start
     @Override
@@ -112,6 +121,10 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
                 String name = xxlJob.value();
                 if (name.trim().length() == 0) {
                     throw new RuntimeException("xxl-job method-jobhandler name invalid, for[" + bean.getClass() + "#" + executeMethod.getName() + "] .");
+                }
+                // support spring environment
+                if (name.startsWith(PLACEHOLDER_PREFIX) && name.endsWith(PLACEHOLDER_SUFFIX)){
+                    name = applicationContext.getEnvironment().getProperty(name.replace(PLACEHOLDER_PREFIX,"").replace(PLACEHOLDER_SUFFIX,""));
                 }
                 if (loadJobHandler(name) != null) {
                     throw new RuntimeException("xxl-job jobhandler[" + name + "] naming conflicts.");
