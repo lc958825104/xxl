@@ -1,0 +1,55 @@
+{
+  "properties": [
+    {
+      "name": "xxl.job.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": "true",
+      "description": "是否启用任务执行器,默认启动true"
+    },  
+    {
+      "name": "xxl.job.accessToken",
+      "type": "java.lang.String",
+      "defaultValue": "",
+      "description": "调度时的通讯令牌."
+    },
+    {
+      "name": "xxl.job.admin.addresses",
+      "type": "java.lang.String",
+      "defaultValue": "http://localhost:8080/xxl-job-admin/",
+      "description": "执行器连接调度中心的地址"
+    },
+    {
+      "name": "xxl.job.executor.appname",
+      "type": "java.lang.String",
+      "defaultValue": "${spring.application.name}",
+      "description": "默认是微服务的名称"
+    },
+    {
+      "name": "xxl.job.executor.logpath",
+      "type": "java.lang.String",
+      "defaultValue": "执行器日志输出路径",
+      "description": ""
+    },
+    {
+      "name": "xxl.job.executor.logretentiondays",
+      "type": "java.lang.Integer",
+      "defaultValue": "7",
+      "description": "执行器日志保留天数"
+    },
+    {
+      "name": "xxl.job.executor.port",
+      "type": "java.lang.Integer",
+      "description": "执行器监控调度的端口."
+    },
+    {
+      "name": "xxl.job.executor.ip",
+      "type": "java.lang.String",
+      "description": "执行器所在机器的IP地址"
+    },
+    {
+      "name": "xxl.job.executor.address",
+      "type": "java.lang.String",
+      "description": "执行器所在机器的地址,如果为空则使用ip:port"
+    }
+  ]
+}
