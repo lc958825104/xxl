@@ -18,7 +18,7 @@ CREATE TABLE `xxl_job_info` (
   `schedule_type` varchar(50) NOT NULL DEFAULT 'NONE' COMMENT '调度类型',
   `schedule_conf` varchar(128) DEFAULT NULL COMMENT '调度配置，值含义取决于调度类型',
   `misfire_strategy` varchar(50) NOT NULL DEFAULT 'DO_NOTHING' COMMENT '调度过期策略',
-  `executor_route_strategy` varchar(50) DEFAULT NULL COMMENT '执行器路由策略',
+  `executor_route_strategy` varchar(50) DEFAULT NULL COMMENT '执行器路由策略',q
   `executor_handler` varchar(255) DEFAULT NULL COMMENT '执行器任务handler',
   `executor_param` varchar(512) DEFAULT NULL COMMENT '执行器任务参数',
   `executor_block_strategy` varchar(50) DEFAULT NULL COMMENT '阻塞处理策略',
