@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by xuxueli on 16/7/22.
  */
+
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
 
@@ -42,6 +43,10 @@ public class TriggerCallbackThread {
 
     /**
      * callback thread
+     */
+    /** TODO 队列中的数据 是在每次任务执行完以后填充的 传递code及msg  callback 干嘛的待确认
+     * 一直循环从队列中获取数据 发生给xxl服务器（/api/callback）
+     * 如果失败了会写入log目录下  triggerRetryCallbackThread 线程会每隔30秒(可配置)重新发送
      */
     private Thread triggerCallbackThread;
     private Thread triggerRetryCallbackThread;
@@ -68,6 +73,7 @@ public class TriggerCallbackThread {
 
                             // callback list param
                             List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
+                            //将队列中所有对象全部取出
                             int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
                             callbackParamList.add(callback);
 
@@ -163,6 +169,7 @@ public class TriggerCallbackThread {
     private void doCallback(List<HandleCallbackParam> callbackParamList){
         boolean callbackRet = false;
         // callback, will retry if error
+        //getAdminBizList 所有xxl服务器地址
         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
             try {
                 ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);

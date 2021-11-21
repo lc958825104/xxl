@@ -74,7 +74,7 @@ public class XxlJobExecutor  {
         initAdminBizList(adminAddresses, accessToken);
 
 
-        // init JobLogFileCleanThread
+        // init JobLogFileCleanThread 开启一个线程清理日志
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
         // init TriggerCallbackThread
@@ -116,6 +116,13 @@ public class XxlJobExecutor  {
 
     // ---------------------- admin-client (rpc invoker) ----------------------
     private static List<AdminBiz> adminBizList;
+
+    /**
+     * 初始化xxl 服务地址 解析包装成 AdminBizClient 存到 adminBizList内 （地址支持多个以,隔开）
+     * @param adminAddresses
+     * @param accessToken
+     * @throws Exception
+     */
     private void initAdminBizList(String adminAddresses, String accessToken) throws Exception {
         if (adminAddresses!=null && adminAddresses.trim().length()>0) {
             for (String address: adminAddresses.trim().split(",")) {
@@ -206,7 +213,7 @@ public class XxlJobExecutor  {
             throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
                     "The correct method format like \" public ReturnT<String> execute(String param) \" .");
         }*/
-
+        //TODO 设置访问权限 说明私有的方法也是支持的 demo待实践
         executeMethod.setAccessible(true);
 
         // init and destroy
@@ -215,6 +222,7 @@ public class XxlJobExecutor  {
 
         if (xxlJob.init().trim().length() > 0) {
             try {
+                //获取初始化方法
                 initMethod = clazz.getDeclaredMethod(xxlJob.init());
                 initMethod.setAccessible(true);
             } catch (NoSuchMethodException e) {
@@ -231,6 +239,7 @@ public class XxlJobExecutor  {
         }
 
         // registry jobhandler
+        //注册到map中
         registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
 
     }
@@ -239,6 +248,7 @@ public class XxlJobExecutor  {
     // ---------------------- job thread repository ----------------------
     private static ConcurrentMap<Integer, JobThread> jobThreadRepository = new ConcurrentHashMap<Integer, JobThread>();
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason){
+        //TODO 处理业务
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
         logger.info(">>>>>>>>>>> xxl-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});

@@ -98,8 +98,10 @@ public class JobThread extends Thread{
 
     	// init
     	try {
+    		//调用 xxljob注解的  init方法
 			handler.init();
 		} catch (Throwable e) {
+    		//TODO  初始化方法报错 并不会影响正常流程执行  如果 初始化涉及业务相关 要注意
     		logger.error(e.getMessage(), e);
 		}
 
@@ -126,12 +128,13 @@ public class JobThread extends Thread{
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
 
-					// init job context
+					// init job context  包装执行的一些参数 通过 threadlocal 存取
 					XxlJobContext.setXxlJobContext(xxlJobContext);
 
 					// execute
 					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
 
+					//执行超时时间
 					if (triggerParam.getExecutorTimeout() > 0) {
 						// limit timeout
 						Thread futureThread = null;
@@ -162,6 +165,7 @@ public class JobThread extends Thread{
 							futureThread.interrupt();
 						}
 					} else {
+						//如果没有执行超时时间的限制 则 直接调用业务方法
 						// just execute
 						handler.execute();
 					}
@@ -183,6 +187,7 @@ public class JobThread extends Thread{
 					);
 
 				} else {
+					//每3秒获取一次执行参数 超过30次 且 依然没有  就 删除对应的线程  删除线程会将top置为true   这个设计应该是为了一些 执行频繁的任务设计的  一直死循环跑任务
 					if (idleTimes > 30) {
 						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
 							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
@@ -227,6 +232,7 @@ public class JobThread extends Thread{
         }
 
 		// callback trigger request in queue
+		//TODO  待确认
 		while(triggerQueue !=null && triggerQueue.size()>0){
 			TriggerParam triggerParam = triggerQueue.poll();
 			if (triggerParam!=null) {
