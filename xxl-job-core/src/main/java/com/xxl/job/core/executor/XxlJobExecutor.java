@@ -180,6 +180,7 @@ public class XxlJobExecutor  {
 
 
     // ---------------------- job handler repository ----------------------
+    //存储业务对象 key为 xxljob.value
     private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap<String, IJobHandler>();
     public static IJobHandler loadJobHandler(String name){
         return jobHandlerRepository.get(name);
@@ -239,7 +240,6 @@ public class XxlJobExecutor  {
         }
 
         // registry jobhandler
-        //注册到map中
         registJobHandler(name, new MethodJobHandler(bean, executeMethod, initMethod, destroyMethod));
 
     }

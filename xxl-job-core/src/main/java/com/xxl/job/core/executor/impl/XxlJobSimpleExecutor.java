@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * xxl-job executor (for frameless)
+ * 非spring项目 使用
  *
  * @author xuxueli 2020-11-05
  */

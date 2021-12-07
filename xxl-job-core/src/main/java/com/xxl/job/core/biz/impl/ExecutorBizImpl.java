@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-/**
+/** 用于处理接收请求
  * Created by xuxueli on 17/3/1.
  */
 public class ExecutorBizImpl implements ExecutorBiz {
