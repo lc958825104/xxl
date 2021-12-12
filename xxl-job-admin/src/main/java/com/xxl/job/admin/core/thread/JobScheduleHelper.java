@@ -368,6 +368,14 @@ public class JobScheduleHelper {
 
 
     // ---------------------- tools ----------------------
+
+    /**
+     * 获取下次执行时间
+     * @param jobInfo
+     * @param fromTime
+     * @return
+     * @throws Exception
+     */
     public static Date generateNextValidTime(XxlJobInfo jobInfo, Date fromTime) throws Exception {
         ScheduleTypeEnum scheduleTypeEnum = ScheduleTypeEnum.match(jobInfo.getScheduleType(), null);
         if (ScheduleTypeEnum.CRON == scheduleTypeEnum) {
