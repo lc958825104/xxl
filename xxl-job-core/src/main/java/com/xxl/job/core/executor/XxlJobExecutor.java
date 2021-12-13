@@ -67,20 +67,22 @@ public class XxlJobExecutor  {
     // ---------------------- start + stop ----------------------
     public void start() throws Exception {
 
-        // init logpath
+        //TODO 初始化日志路径
         XxlJobFileAppender.initLogPath(logPath);
 
         // init invoker, admin-client
+        //TODO 初始化服务器地址
         initAdminBizList(adminAddresses, accessToken);
 
 
-        // init JobLogFileCleanThread 开启一个线程清理日志
+        //TODO init JobLogFileCleanThread 开启一个线程清理日志
         JobLogFileCleanThread.getInstance().start(logRetentionDays);
 
-        // init TriggerCallbackThread
+        //TODO init TriggerCallbackThread 调用服务端 /api/callback  反馈任务执行结果
         TriggerCallbackThread.getInstance().start();
 
         // init executor-server
+        //TODO 初始化XXLJOB服务
         initEmbedServer(address, ip, port, appname, accessToken);
     }
     public void destroy(){
@@ -164,6 +166,7 @@ public class XxlJobExecutor  {
 
         // start
         embedServer = new EmbedServer();
+        //TODO
         embedServer.start(address, port, appname, accessToken);
     }
 

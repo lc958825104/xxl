@@ -98,7 +98,7 @@ public class JobThread extends Thread{
 
     	// init
     	try {
-    		//调用 xxljob注解的  init方法
+    		//TODO 调用 xxljob注解的  init方法
 			handler.init();
 		} catch (Throwable e) {
     		//TODO  初始化方法报错 并不会影响正常流程执行  如果 初始化涉及业务相关 要注意
@@ -113,6 +113,7 @@ public class JobThread extends Thread{
             TriggerParam triggerParam = null;
             try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
+				//TODO
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
 				if (triggerParam!=null) {
 					running = true;
@@ -125,7 +126,9 @@ public class JobThread extends Thread{
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
 							logFileName,
+							//TODO 当前节点序号
 							triggerParam.getBroadcastIndex(),
+							//TODO 节点总数
 							triggerParam.getBroadcastTotal());
 
 					// init job context  包装执行的一些参数 通过 threadlocal 存取
@@ -134,7 +137,7 @@ public class JobThread extends Thread{
 					// execute
 					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
 
-					//执行超时时间
+					//TODO 执行超时时间
 					if (triggerParam.getExecutorTimeout() > 0) {
 						// limit timeout
 						Thread futureThread = null;
@@ -187,7 +190,8 @@ public class JobThread extends Thread{
 					);
 
 				} else {
-					//每3秒获取一次执行参数 超过30次 且 依然没有  就 删除对应的线程  删除线程会将top置为true   这个设计应该是为了一些 执行频繁的任务设计的  一直死循环跑任务
+					//TODO 每3秒获取一次执行参数 超过30次 且 依然没有  就 删除对应的线程  删除线程会将top置为true   这个设计应该是为了一些 执行频繁的任务设计的  一直死循环跑任务
+					//TODO  30这个数字应该可配置 线程存活时间太长了
 					if (idleTimes > 30) {
 						if(triggerQueue.size() == 0) {	// avoid concurrent trigger causes jobId-lost
 							XxlJobExecutor.removeJobThread(jobId, "excutor idel times over limit.");
@@ -212,6 +216,7 @@ public class JobThread extends Thread{
                     // callback handler info
                     if (!toStop) {
                         // commonm
+						//TODO 填充callBackQueue 队列  用于讲任务执行结果返回给服务端
                         TriggerCallbackThread.pushCallBack(new HandleCallbackParam(
                         		triggerParam.getLogId(),
 								triggerParam.getLogDateTime(),

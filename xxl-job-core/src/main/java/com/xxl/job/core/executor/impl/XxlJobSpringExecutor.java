@@ -39,13 +39,15 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         /*initJobHandlerRepository(applicationContext);*/
 
         // init JobHandler Repository (for method)
+        //初始化xxljob注解对象
         initJobHandlerMethodRepository(applicationContext);
 
-        //TODO 初始化  glueFactory 使用场景待定 应该是执行脚本用的
+        //初始化  glueFactory 用于执行groovy脚本
         GlueFactory.refreshInstance(1);
 
         // super start
         try {
+            //TODO
             super.start();
         } catch (Exception e) {
             throw new RuntimeException(e);

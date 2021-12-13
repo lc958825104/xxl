@@ -43,6 +43,7 @@ public class EmbedServer {
                 // param
                 EventLoopGroup bossGroup = new NioEventLoopGroup();
                 EventLoopGroup workerGroup = new NioEventLoopGroup();
+                //TODO 用于接收服务端请求的线程池
                 ThreadPoolExecutor bizThreadPool = new ThreadPoolExecutor(
                         0,
                         200,
@@ -75,7 +76,7 @@ public class EmbedServer {
                                             .addLast(new IdleStateHandler(0, 0, 30 * 3, TimeUnit.SECONDS))  // beat 3N, close if idle
                                             .addLast(new HttpServerCodec())
                                             .addLast(new HttpObjectAggregator(5 * 1024 * 1024))  // merge request & reponse to FULL
-                                            //执行
+                                            //TODO 接收请求
                                             .addLast(new EmbedHttpServerHandler(executorBiz, accessToken, bizThreadPool));
                                 }
                             })
@@ -86,7 +87,7 @@ public class EmbedServer {
 
                     logger.info(">>>>>>>>>>> xxl-job remoting server start success, nettype = {}, port = {}", EmbedServer.class, port);
 
-                    //注册当前节点
+                    //TODO 调用 api/registry 注册当前节点
                     startRegistry(appname, address);
 
                     // wait util stop
@@ -159,11 +160,12 @@ public class EmbedServer {
             boolean keepAlive = HttpUtil.isKeepAlive(msg);
             String accessTokenReq = msg.headers().get(XxlJobRemotingUtil.XXL_JOB_ACCESS_TOKEN);
 
-            // invoke
+            // TODO 接收请求以后立刻提交给另一个线程池
             bizThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
                     // do invoke
+                    //TODO
                     Object responseObj = process(httpMethod, uri, requestData, accessTokenReq);
 
                     // to json
@@ -177,7 +179,7 @@ public class EmbedServer {
 
         private Object process(HttpMethod httpMethod, String uri, String requestData, String accessTokenReq) {
 
-            // valid
+            //#################### 校验
             if (HttpMethod.POST != httpMethod) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, HttpMethod not support.");
             }
@@ -189,21 +191,29 @@ public class EmbedServer {
                     && !accessToken.equals(accessTokenReq)) {
                 return new ReturnT<String>(ReturnT.FAIL_CODE, "The access token is wrong.");
             }
+            //######################
+
+
 
             // services mapping
             try {
                 if ("/beat".equals(uri)) {
+                    //TODO 用于 路由策略 故障转移
                     return executorBiz.beat();
                 } else if ("/idleBeat".equals(uri)) {
+                    //TODO 用于 路由策略 忙碌转移
                     IdleBeatParam idleBeatParam = GsonTool.fromJson(requestData, IdleBeatParam.class);
                     return executorBiz.idleBeat(idleBeatParam);
                 } else if ("/run".equals(uri)) {
+                    //TODO 执行任务
                     TriggerParam triggerParam = GsonTool.fromJson(requestData, TriggerParam.class);
                     return executorBiz.run(triggerParam);
                 } else if ("/kill".equals(uri)) {
+                    //TODO 中止任务
                     KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
                     return executorBiz.kill(killParam);
                 } else if ("/log".equals(uri)) {
+                    //TODO 查询日志
                     LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
                     return executorBiz.log(logParam);
                 } else {

@@ -46,16 +46,18 @@ public class ExecutorBizImpl implements ExecutorBiz {
     @Override
     public ReturnT<String> run(TriggerParam triggerParam) {
         // load old：jobHandler + jobThread
-        //优先获取缓存中的处理器 （可以自定义设置）
+        //TODO 获取有没有正在执行的线程
         JobThread jobThread = XxlJobExecutor.loadJobThread(triggerParam.getJobId());
         IJobHandler jobHandler = jobThread!=null?jobThread.getHandler():null;
         String removeOldReason = null;
 
         // valid：jobHandler + jobThread
         GlueTypeEnum glueTypeEnum = GlueTypeEnum.match(triggerParam.getGlueType());
+        //TODO 最常用的 bean 模式
         if (GlueTypeEnum.BEAN == glueTypeEnum) {
 
             // new jobhandler  通过解析对象时包装的map获取
+            //TODO 通过一开始解析的xxljob注解 获取对应的对象
             IJobHandler newJobHandler = XxlJobExecutor.loadJobHandler(triggerParam.getExecutorHandler());
 
             // valid old jobThread
@@ -75,7 +77,9 @@ public class ExecutorBizImpl implements ExecutorBiz {
                 }
             }
 
-        } else if (GlueTypeEnum.GLUE_GROOVY == glueTypeEnum) {
+        }
+        //groovy 脚本 忽略
+        else if (GlueTypeEnum.GLUE_GROOVY == glueTypeEnum) {
 
             // valid old jobThread
             if (jobThread != null &&
@@ -98,7 +102,9 @@ public class ExecutorBizImpl implements ExecutorBiz {
                     return new ReturnT<String>(ReturnT.FAIL_CODE, e.getMessage());
                 }
             }
-        } else if (glueTypeEnum!=null && glueTypeEnum.isScript()) {
+        }
+        //其他脚本模式 忽略
+        else if (glueTypeEnum!=null && glueTypeEnum.isScript()) {
 
             // valid old jobThread
             if (jobThread != null &&
@@ -121,7 +127,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // executor block strategy
         if (jobThread != null) {
-            //阻塞处理策略
+            //TODO 阻塞处理策略
             ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), null);
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
                 //丢弃后续调用
@@ -145,11 +151,12 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // replace thread (new or exists invalid)
         if (jobThread == null) {
-            //开启一个执行业务的线程  如果是覆盖之前的调用 则会触发之前任务的 interrupt
+            //TODO 开启一个执行业务的线程  如果是覆盖之前的调用 则会触发之前任务的 interrupt
             jobThread = XxlJobExecutor.registJobThread(triggerParam.getJobId(), jobHandler, removeOldReason);
         }
 
         // push data to queue
+        //TODO 讲当前任务添加进队列  上一步开启的线程 会扫描这个队列
         ReturnT<String> pushResult = jobThread.pushTriggerQueue(triggerParam);
         return pushResult;
     }

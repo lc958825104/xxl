@@ -76,7 +76,7 @@ public class ExecutorRegistryThread {
                     }
                 }
 
-                // registry remove 如果通过stop 中断了 注册过程  则会立刻调用 移除接口
+                // TODO registry remove 如果当前服务中止  则会立刻调用 移除接口
                 try {
                     RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
