@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentMap;
  *      a、LFU(Least Frequently Used)：最不经常使用，频率/次数
  *      b(*)、LRU(Least Recently Used)：最近最久未使用，时间
  *
+ * 基于 LinkedHashMap （accessorder=true）的访问顺序 来控制
  * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteLRU extends ExecutorRouter {
