@@ -59,11 +59,12 @@ public class JobRegistryHelper {
 				while (!toStop) {
 					try {
 						// auto registry group
+						//
 						List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
-							//查询有没有90秒之前注册过的节点 有则直接删除
+							//TODO 查询有没有90秒之前注册过的节点 有则直接删除
 							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (ids!=null && ids.size()>0) {
 								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(ids);
@@ -71,10 +72,11 @@ public class JobRegistryHelper {
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
-							//查询详细90秒内注册过的
+							//TODO 查询 90秒内注册过的
 							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
+									//TODO
 									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
 										String appname = item.getRegistryKey();
 										List<String> registryList = appAddressMap.get(appname);
@@ -105,7 +107,7 @@ public class JobRegistryHelper {
 								}
 								group.setAddressList(addressListStr);
 								group.setUpdateTime(new Date());
-								//TODO 循环内更新
+								//TODO 循环更新 执行器 对应的 注册列表
 								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
@@ -115,7 +117,7 @@ public class JobRegistryHelper {
 						}
 					}
 					try {
-						//间隔30秒
+						//TODO 间隔30秒
 						TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
 					} catch (InterruptedException e) {
 						if (!toStop) {
