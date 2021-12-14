@@ -190,7 +190,7 @@ public class TriggerCallbackThread {
             }
         }
         if (!callbackRet) {
-            //TODO 请求服务端异常处理（写进日志文件）  如果部分成功部分失败 是不是重复劳动
+            //TODO 请求服务端异常处理（写进日志文件）  如果部分成功部分失败 是不是重复劳动 目前不会有这种场景
             appendFailCallbackFile(callbackParamList);
         }
     }

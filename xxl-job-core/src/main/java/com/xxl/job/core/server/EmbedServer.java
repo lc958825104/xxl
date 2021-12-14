@@ -213,7 +213,7 @@ public class EmbedServer {
                     KillParam killParam = GsonTool.fromJson(requestData, KillParam.class);
                     return executorBiz.kill(killParam);
                 } else if ("/log".equals(uri)) {
-                    //TODO 查询日志
+                    //TODO 查询日志 注意 实时通过客户端查询日志 如果客户端是在容器中每次部署要注意下日志路径
                     LogParam logParam = GsonTool.fromJson(requestData, LogParam.class);
                     return executorBiz.log(logParam);
                 } else {

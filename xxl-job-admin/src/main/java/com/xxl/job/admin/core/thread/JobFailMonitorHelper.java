@@ -44,6 +44,7 @@ public class JobFailMonitorHelper {
 
 								// lock log
 								//这里通过 依赖数据库事务 来进行避免 多节点时数据的重复操作问题
+								//TODO 如果在这一步服务挂了 这批数据就会被下一个线程扫描为失败
 								int lockRet = XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateAlarmStatus(failLogId, 0, -1);
 								if (lockRet < 1) {
 									continue;

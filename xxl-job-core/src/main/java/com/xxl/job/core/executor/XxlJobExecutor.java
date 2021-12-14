@@ -154,6 +154,7 @@ public class XxlJobExecutor  {
         ip = (ip!=null&&ip.trim().length()>0)?ip: IpUtil.getIp();
 
         // generate address
+        //TODO 优先使用address
         if (address==null || address.trim().length()==0) {
             String ip_port_address = IpUtil.getIpPort(ip, port);   // registry-address：default use address to registry , otherwise use ip:port if address is null
             address = "http://{ip_port}/".replace("{ip_port}", ip_port_address);
@@ -217,7 +218,7 @@ public class XxlJobExecutor  {
             throw new RuntimeException("xxl-job method-jobhandler return-classtype invalid, for[" + bean.getClass() + "#" + method.getName() + "] , " +
                     "The correct method format like \" public ReturnT<String> execute(String param) \" .");
         }*/
-        //TODO 设置访问权限 说明私有的方法也是支持的 demo待实践
+        //TODO 设置访问权限 说明私有的方法也是支持的
         executeMethod.setAccessible(true);
 
         // init and destroy

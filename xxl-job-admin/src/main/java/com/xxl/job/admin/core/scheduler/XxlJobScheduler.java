@@ -44,7 +44,7 @@ public class XxlJobScheduler  {
 
         // admin log report start
         //todo 开启 logrThread 统计报表相关 间隔一分钟
-        //TODO 每次统计都是统计一天的 数据量过大时会影响效率 可以做成增量的   在获取结果时异步 统计 或者每次只统计1分钟的
+        //TODO 每次统计都是统计一天的 没做大数据量的限制 过大时会影响效率 可以做成增量的   在获取结果时异步 统计 或者每次只统计1分钟的
         JobLogReportHelper.getInstance().start();
 
         // start-schedule  ( depend on JobTriggerPoolHelper )

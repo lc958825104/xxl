@@ -127,7 +127,7 @@ public class ExecutorBizImpl implements ExecutorBiz {
 
         // executor block strategy
         if (jobThread != null) {
-            //TODO 阻塞处理策略
+            //TODO 阻塞处理策略  注意点 这边阻塞策略是在客户端 实现的  如果路由策略 每次执行的节点不一样 就会导致重复执行
             ExecutorBlockStrategyEnum blockStrategy = ExecutorBlockStrategyEnum.match(triggerParam.getExecutorBlockStrategy(), null);
             if (ExecutorBlockStrategyEnum.DISCARD_LATER == blockStrategy) {
                 //丢弃后续调用

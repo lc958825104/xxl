@@ -34,7 +34,7 @@ public class JobLogFileCleanThread {
      */
     public void start(final long logRetentionDays){
 
-        // limit min value 最小值三天一清理
+        // TDOD 注意点 最小值三天一清理
         if (logRetentionDays < 3 ) {
             return;
         }
