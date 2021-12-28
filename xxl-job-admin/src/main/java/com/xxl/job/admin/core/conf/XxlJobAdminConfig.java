@@ -23,6 +23,7 @@ import java.util.Arrays;
 public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     private static XxlJobAdminConfig adminConfig = null;
+
     public static XxlJobAdminConfig getAdminConfig() {
         return adminConfig;
     }
@@ -66,6 +67,15 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
+
+    @Value("${alarm.wechat.hook:}")
+    private String wechatHook;
+
+    @Value("${alarm.wechat.enabled:false}")
+    private boolean enableWeChatAlarm;
+
+    @Value("${env:}")
+    private String env;
 
     // dao, service
 
@@ -121,6 +131,30 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
             return -1;  // Limit greater than or equal to 7, otherwise close
         }
         return logretentiondays;
+    }
+
+    public String getEnv() {
+        return env;
+    }
+
+    public void setEnv(String env) {
+        this.env = env;
+    }
+
+    public String getWechatHook() {
+        return wechatHook;
+    }
+
+    public void setWechatHook(String wechatHook) {
+        this.wechatHook = wechatHook;
+    }
+
+    public boolean isEnableWeChatAlarm() {
+        return enableWeChatAlarm;
+    }
+
+    public void setEnableWeChatAlarm(boolean enableWeChatAlarm) {
+        this.enableWeChatAlarm = enableWeChatAlarm;
     }
 
     public XxlJobLogDao getXxlJobLogDao() {
