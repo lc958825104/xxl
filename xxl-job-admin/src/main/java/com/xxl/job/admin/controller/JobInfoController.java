@@ -1,5 +1,6 @@
 package com.xxl.job.admin.controller;
 
+import com.xxl.job.admin.core.alarm.AlarmTypeEnum;
 import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
@@ -55,7 +56,7 @@ public class JobInfoController {
 		model.addAttribute("ExecutorBlockStrategyEnum", ExecutorBlockStrategyEnum.values());	    // 阻塞处理策略-字典
 		model.addAttribute("ScheduleTypeEnum", ScheduleTypeEnum.values());	    				// 调度类型
 		model.addAttribute("MisfireStrategyEnum", MisfireStrategyEnum.values());	    			// 调度过期策略
-
+		model.addAttribute("AlarmTypeEnum", AlarmTypeEnum.values());
 		// 执行器列表
 		List<XxlJobGroup> jobGroupList_all =  xxlJobGroupDao.findAll();
 
