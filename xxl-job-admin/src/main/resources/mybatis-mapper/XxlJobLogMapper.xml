@@ -253,7 +253,7 @@
 			xxl_job_log t
 			LEFT JOIN xxl_job_registry t2 ON t.executor_address = t2.registry_value
 		WHERE
-			t.trigger_code = 200
+			t.trigger_code in (0,200)
 				AND t.handle_code = 0
 				AND t.trigger_time <![CDATA[ <= ]]> #{losedTime}
 				AND t2.id IS NULL;
