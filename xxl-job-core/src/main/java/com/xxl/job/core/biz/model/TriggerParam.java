@@ -12,6 +12,7 @@ public class TriggerParam implements Serializable{
 
     private String executorHandler;
     private String executorParams;
+    private String shardingParam;
     private String executorBlockStrategy;
     private int executorTimeout;
 
@@ -44,6 +45,14 @@ public class TriggerParam implements Serializable{
 
     public String getExecutorParams() {
         return executorParams;
+    }
+
+    public String getShardingParam() {
+        return shardingParam;
+    }
+
+    public void setShardingParam(String shardingParam) {
+        this.shardingParam = shardingParam;
     }
 
     public void setExecutorParams(String executorParams) {

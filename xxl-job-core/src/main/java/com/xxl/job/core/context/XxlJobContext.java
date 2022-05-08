@@ -8,9 +8,9 @@ package com.xxl.job.core.context;
  */
 public class XxlJobContext {
 
-    public static final int HANDLE_COCE_SUCCESS = 200;
-    public static final int HANDLE_COCE_FAIL = 500;
-    public static final int HANDLE_COCE_TIMEOUT = 502;
+    public static final int HANDLE_CODE_SUCCESS = 200;
+    public static final int HANDLE_CODE_FAIL = 500;
+    public static final int HANDLE_CODE_TIMEOUT = 502;
 
     // ---------------------- base info ----------------------
 
@@ -23,6 +23,10 @@ public class XxlJobContext {
      * job param
      */
     private final String jobParam;
+    /**
+     * job param
+     */
+    private final String jobShardingParam;
 
     // ---------------------- for log ----------------------
 
@@ -64,11 +68,22 @@ public class XxlJobContext {
     public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal) {
         this.jobId = jobId;
         this.jobParam = jobParam;
+        this.jobShardingParam = null;
         this.jobLogFileName = jobLogFileName;
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
 
-        this.handleCode = HANDLE_COCE_SUCCESS;  // default success
+        this.handleCode = HANDLE_CODE_SUCCESS;  // default success
+    }
+
+    public XxlJobContext(long jobId, String jobParam, String jobShardingParam, String jobLogFileName, int shardIndex, int shardTotal) {
+        this.jobId = jobId;
+        this.jobParam = jobParam;
+        this.jobShardingParam = jobShardingParam;
+        this.jobLogFileName = jobLogFileName;
+        this.shardIndex = shardIndex;
+        this.shardTotal = shardTotal;
+        this.handleCode = HANDLE_CODE_SUCCESS;  // default success
     }
 
     public long getJobId() {
@@ -77,6 +92,10 @@ public class XxlJobContext {
 
     public String getJobParam() {
         return jobParam;
+    }
+
+    public String getJobShardingParam() {
+        return jobShardingParam;
     }
 
     public String getJobLogFileName() {

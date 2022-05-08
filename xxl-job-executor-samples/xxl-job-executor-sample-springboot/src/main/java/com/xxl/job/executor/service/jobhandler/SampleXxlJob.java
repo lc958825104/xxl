@@ -1,5 +1,6 @@
 package com.xxl.job.executor.service.jobhandler;
 
+import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
 import org.slf4j.Logger;
@@ -37,10 +38,14 @@ public class SampleXxlJob {
     @XxlJob("demoJobHandler")
     public void demoJobHandler() throws Exception {
         XxlJobHelper.log("XXL-JOB, Hello World.");
-
-        for (int i = 0; i < 5; i++) {
+        XxlJobContext jobContext = XxlJobContext.getXxlJobContext();
+        logger.info("执行分片：{}， 分片总数：{}，执行参数为：{}，执行分片参数为：{}",
+                jobContext.getShardIndex(), jobContext.getShardTotal(),
+                jobContext.getJobParam(), jobContext.getJobShardingParam());
+        for (int i = 0; i < 1; i++) {
             XxlJobHelper.log("beat at:" + i);
-            TimeUnit.SECONDS.sleep(2);
+            logger.info("beat at:" + i);
+            TimeUnit.SECONDS.sleep(10);
         }
         // default success
     }
@@ -246,7 +251,7 @@ public class SampleXxlJob {
         logger.info("init");
     }
     public void destroy(){
-        logger.info("destory");
+        logger.info("destroy");
     }
 
 

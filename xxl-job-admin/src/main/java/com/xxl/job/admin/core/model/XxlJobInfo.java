@@ -27,6 +27,7 @@ public class XxlJobInfo {
 	private String executorRouteStrategy;	// 执行器路由策略
 	private String executorHandler;		    // 执行器，任务Handler名称
 	private String executorParam;		    // 执行器，任务参数
+	private String shardingParam;		    // 执行器，分片参数
 	private String executorBlockStrategy;	// 阻塞处理策略
 	private int executorTimeout;     		// 任务执行超时时间，单位秒
 	private int executorFailRetryCount;		// 失败重试次数
@@ -41,7 +42,6 @@ public class XxlJobInfo {
 	private int triggerStatus;		// 调度状态：0-停止，1-运行
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
-
 
 	public int getId() {
 		return id;
@@ -145,6 +145,14 @@ public class XxlJobInfo {
 
 	public void setExecutorParam(String executorParam) {
 		this.executorParam = executorParam;
+	}
+
+	public String getShardingParam() {
+		return shardingParam;
+	}
+
+	public void setShardingParam(String shardingParam) {
+		this.shardingParam = shardingParam;
 	}
 
 	public String getExecutorBlockStrategy() {
