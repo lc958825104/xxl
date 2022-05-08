@@ -45,7 +45,7 @@ public class SampleXxlJob {
         for (int i = 0; i < 1; i++) {
             XxlJobHelper.log("beat at:" + i);
             logger.info("beat at:" + i);
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(10);
         }
         // default success
     }
