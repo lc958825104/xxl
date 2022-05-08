@@ -95,7 +95,7 @@ public class TriggerCallbackThread {
                         logger.error(e.getMessage(), e);
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor callback thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor callback thread destroy.");
 
             }
         });
@@ -125,7 +125,7 @@ public class TriggerCallbackThread {
                         }
                     }
                 }
-                logger.info(">>>>>>>>>>> xxl-job, executor retry callback thread destory.");
+                logger.info(">>>>>>>>>>> xxl-job, executor retry callback thread destroy.");
             }
         });
         triggerRetryCallbackThread.setDaemon(true);
@@ -190,6 +190,7 @@ public class TriggerCallbackThread {
             String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
             XxlJobContext.setXxlJobContext(new XxlJobContext(
                     -1,
+                    null,
                     null,
                     logFileName,
                     -1,

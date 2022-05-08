@@ -74,6 +74,7 @@ $(function() {
 						}
 					},
 	                { "data": 'executorParam', "visible" : false},
+	                { "data": 'shardingParam', "visible" : false},
 	                {
 	                	"data": 'addTime',
 	                	"visible" : false,
@@ -266,6 +267,7 @@ $(function() {
 
         $("#jobTriggerModal .form input[name='id']").val( row.id );
         $("#jobTriggerModal .form textarea[name='executorParam']").val( row.executorParam );
+        $("#jobTriggerModal .form textarea[name='shardingParam']").val( row.shardingParam );
 
         $('#jobTriggerModal').modal({backdrop: false, keyboard: false}).modal('show');
     });
@@ -276,6 +278,7 @@ $(function() {
             data : {
                 "id" : $("#jobTriggerModal .form input[name='id']").val(),
                 "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val(),
+                "shardingParam" : $("#jobTriggerModal .textarea[name='shardingParam']").val(),
 				"addressList" : $("#jobTriggerModal .textarea[name='addressList']").val()
             },
             dataType : "json",
@@ -561,6 +564,7 @@ $(function() {
 		$('#updateModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 		$("#updateModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#updateModal .form textarea[name='executorParam']").val( row.executorParam );
+		$("#updateModal .form textarea[name='shardingParam']").val( row.shardingParam );
 
 		// 》init glueType
 		$("#updateModal .form select[name=glueType]").change();
@@ -716,6 +720,7 @@ $(function() {
 		$('#addModal .form select[name=glueType] option[value='+ row.glueType +']').prop('selected', true);
 		$("#addModal .form input[name='executorHandler']").val( row.executorHandler );
 		$("#addModal .form textarea[name='executorParam']").val( row.executorParam );
+		$("#addModal .form textarea[name='shardingParam']").val( row.shardingParam );
 
 		// 》init glueType
 		$("#addModal .form select[name=glueType]").change();
