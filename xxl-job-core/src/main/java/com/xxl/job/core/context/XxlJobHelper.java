@@ -48,6 +48,20 @@ public class XxlJobHelper {
         return xxlJobContext.getJobParam();
     }
 
+    /**
+     * current JobParam
+     *
+     * @return
+     */
+    public static String getJobShardingParam() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return null;
+        }
+
+        return xxlJobContext.getJobShardingParam();
+    }
+
     // ---------------------- for log ----------------------
 
     /**

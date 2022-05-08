@@ -191,6 +191,7 @@ public class TriggerCallbackThread {
             XxlJobContext.setXxlJobContext(new XxlJobContext(
                     -1,
                     null,
+                    null,
                     logFileName,
                     -1,
                     -1));

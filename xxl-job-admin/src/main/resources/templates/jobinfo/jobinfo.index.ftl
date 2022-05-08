@@ -83,6 +83,7 @@
                                         <th name="scheduleType" >${I18n.schedule_type}</th>
                                         <th name="glueType" >${I18n.jobinfo_field_gluetype}</th>
                                         <th name="executorParam" >${I18n.jobinfo_field_executorparam}</th>
+                                        <th name="shardingParam" >${I18n.jobinfo_field_shardingparam}</th>
 					                  	<th name="addTime" >addTime</th>
 					                  	<th name="updateTime" >updateTime</th>
 					                  	<th name="author" >${I18n.jobinfo_field_author}</th>
@@ -188,6 +189,13 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_shardingparam}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="shardingParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_shardingparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                        </div>
+                    </div>
+
                     <br>
                     <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_advanced}</p>    <#-- 高级配置 -->
 
@@ -265,6 +273,7 @@ echo "${I18n.jobinfo_script_location}：$0"
 echo "${I18n.jobinfo_field_executorparam}：$1"
 echo "${I18n.jobinfo_shard_index} = $2"
 echo "${I18n.jobinfo_shard_total} = $3"
+echo "${I18n.jobinfo_field_shardingparam}：$4"
 <#--echo "参数数量：$#"
 for param in $*
 do
@@ -287,6 +296,7 @@ print "${I18n.jobinfo_script_location}：", sys.argv[0]
 print "${I18n.jobinfo_field_executorparam}：", sys.argv[1]
 print "${I18n.jobinfo_shard_index}：", sys.argv[2]
 print "${I18n.jobinfo_shard_total}：", sys.argv[3]
+print "${I18n.jobinfo_field_shardingparam}：", sys.argv[4]
 <#--for i in range(1, len(sys.argv)):
 	time.sleep(1)
 	print "参数", i, sys.argv[i]-->
@@ -309,6 +319,7 @@ logging.info("脚本文件：" + sys.argv[0])
     echo "${I18n.jobinfo_field_executorparam}：$argv[1]  \n";
     echo "${I18n.jobinfo_shard_index} = $argv[2]  \n";
     echo "${I18n.jobinfo_shard_total} = $argv[3]  \n";
+    echo "${I18n.jobinfo_field_shardingparam} = $argv[4]  \n";
 
     echo "Good bye!  \n";
     exit(0);
@@ -430,6 +441,13 @@ exit 0
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
                         <div class="col-sm-10">
                             <textarea class="textarea form-control" name="executorParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_executorparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_shardingparam}<font color="black">*</font></label>
+                        <div class="col-sm-10">
+                            <textarea class="textarea form-control" name="shardingParam" placeholder="${I18n.system_please_input}${I18n.jobinfo_field_shardingparam}" maxlength="512" style="height: 63px; line-height: 1.2;"></textarea>
                         </div>
                     </div>
 

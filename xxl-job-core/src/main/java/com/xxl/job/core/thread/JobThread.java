@@ -5,6 +5,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.context.XxlJobHelper;
+import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.executor.XxlJobExecutor;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.log.XxlJobFileAppender;
@@ -103,6 +104,7 @@ public class JobThread extends Thread{
     		logger.error(e.getMessage(), e);
 		}
 
+		ExecutorService executor2 = Executors.newFixedThreadPool(5);
 		// execute
 		while(!toStop){
 			running = false;
@@ -112,7 +114,7 @@ public class JobThread extends Thread{
             try {
 				// to check toStop signal, we need cycle, so wo cannot use queue.take(), instand of poll(timeout)
 				triggerParam = triggerQueue.poll(3L, TimeUnit.SECONDS);
-				if (triggerParam!=null) {
+ 				if (triggerParam!=null) {
 					running = true;
 					idleTimes = 0;
 					triggerLogIdSet.remove(triggerParam.getLogId());
@@ -122,6 +124,7 @@ public class JobThread extends Thread{
 					XxlJobContext xxlJobContext = new XxlJobContext(
 							triggerParam.getJobId(),
 							triggerParam.getExecutorParams(),
+							triggerParam.getShardingParam(),
 							logFileName,
 							triggerParam.getBroadcastIndex(),
 							triggerParam.getBroadcastTotal());
@@ -130,7 +133,7 @@ public class JobThread extends Thread{
 					XxlJobContext.setXxlJobContext(xxlJobContext);
 
 					// execute
-					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam());
+					XxlJobHelper.log("<br>----------- xxl-job job execute start -----------<br>----------- Param:" + xxlJobContext.getJobParam()+ "Sharding Param:" + xxlJobContext.getJobShardingParam());
 
 					if (triggerParam.getExecutorTimeout() > 0) {
 						// limit timeout
@@ -161,6 +164,19 @@ public class JobThread extends Thread{
 						} finally {
 							futureThread.interrupt();
 						}
+					} else if (triggerParam.getExecutorBlockStrategy().equals(ExecutorBlockStrategyEnum.CONCURRENT_EXECUTION.name())){
+						executor2.execute(new Runnable() {
+						  @Override
+						  public void run() {
+							  try {
+								  // init job context
+								  XxlJobContext.setXxlJobContext(xxlJobContext);
+								  handler.execute();
+							  } catch (Exception e) {
+								  e.printStackTrace();
+							  }
+						  }
+					  });
 					} else {
 						// just execute
 						handler.execute();
@@ -225,6 +241,7 @@ public class JobThread extends Thread{
                 }
             }
         }
+		executor2.shutdown();
 
 		// callback trigger request in queue
 		while(triggerQueue !=null && triggerQueue.size()>0){

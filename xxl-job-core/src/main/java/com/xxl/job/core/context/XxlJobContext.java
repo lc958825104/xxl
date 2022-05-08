@@ -23,6 +23,10 @@ public class XxlJobContext {
      * job param
      */
     private final String jobParam;
+    /**
+     * job param
+     */
+    private final String jobShardingParam;
 
     // ---------------------- for log ----------------------
 
@@ -64,10 +68,21 @@ public class XxlJobContext {
     public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal) {
         this.jobId = jobId;
         this.jobParam = jobParam;
+        this.jobShardingParam = null;
         this.jobLogFileName = jobLogFileName;
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
 
+        this.handleCode = HANDLE_CODE_SUCCESS;  // default success
+    }
+
+    public XxlJobContext(long jobId, String jobParam, String jobShardingParam, String jobLogFileName, int shardIndex, int shardTotal) {
+        this.jobId = jobId;
+        this.jobParam = jobParam;
+        this.jobShardingParam = jobShardingParam;
+        this.jobLogFileName = jobLogFileName;
+        this.shardIndex = shardIndex;
+        this.shardTotal = shardTotal;
         this.handleCode = HANDLE_CODE_SUCCESS;  // default success
     }
 
@@ -77,6 +92,10 @@ public class XxlJobContext {
 
     public String getJobParam() {
         return jobParam;
+    }
+
+    public String getJobShardingParam() {
+        return jobShardingParam;
     }
 
     public String getJobLogFileName() {
