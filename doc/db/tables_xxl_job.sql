@@ -12,6 +12,7 @@ CREATE TABLE `xxl_job_info` (
   `job_group` int(11) NOT NULL COMMENT '执行器主键ID',
   `job_desc` varchar(255) NOT NULL,
   `add_time` datetime DEFAULT NULL,
+  `version` varchar(128) default null comment '标签',
   `update_time` datetime DEFAULT NULL,
   `author` varchar(64) DEFAULT NULL COMMENT '作者',
   `alarm_email` varchar(255) DEFAULT NULL COMMENT '报警邮件',
@@ -80,6 +81,7 @@ CREATE TABLE `xxl_job_logglue` (
 
 CREATE TABLE `xxl_job_registry` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `registry_version` varchar(128) default null comment '标签',
   `registry_group` varchar(50) NOT NULL,
   `registry_key` varchar(255) NOT NULL,
   `registry_value` varchar(255) NOT NULL,

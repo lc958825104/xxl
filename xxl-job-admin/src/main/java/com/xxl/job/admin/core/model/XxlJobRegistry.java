@@ -9,6 +9,7 @@ public class XxlJobRegistry {
 
     private int id;
     private String registryGroup;
+    private String registryVersion;
     private String registryKey;
     private String registryValue;
     private Date updateTime;
@@ -24,7 +25,15 @@ public class XxlJobRegistry {
     public String getRegistryGroup() {
         return registryGroup;
     }
-
+    
+    public String getRegistryVersion() {
+        return registryVersion;
+    }
+    
+    public void setRegistryVersion(String registryVersion) {
+        this.registryVersion = registryVersion;
+    }
+    
     public void setRegistryGroup(String registryGroup) {
         this.registryGroup = registryGroup;
     }

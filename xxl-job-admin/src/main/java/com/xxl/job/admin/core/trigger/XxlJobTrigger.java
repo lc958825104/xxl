@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
+import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.core.util.I18nUtil;
@@ -13,10 +14,13 @@ import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.util.IpUtil;
 import com.xxl.job.core.util.ThrowableUtil;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import org.springframework.util.StringUtils;
 
 /**
  * xxl-job trigger
@@ -46,7 +50,7 @@ public class XxlJobTrigger {
                                int failRetryCount,
                                String executorShardingParam,
                                String executorParam,
-                               String addressList) {
+                               String addressList,String version) {
 
         // load data
         XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(jobId);
@@ -57,8 +61,22 @@ public class XxlJobTrigger {
         if (executorParam != null) {
             jobInfo.setExecutorParam(executorParam);
         }
+        if (version !=null){
+            jobInfo.setVersion(version);
+        }
         int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
         XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(jobInfo.getJobGroup());
+        //版本过滤 分成手动模式和自动模式，手动模式下取传入参数，自动模式取jobinfo参数，仅executorParam和version
+        if (!StringUtils.isEmpty(jobInfo.getVersion())&&!VersionEnum.DEFAULT.get().equals(jobInfo.getVersion())) {
+            List<XxlJobRegistry> byVersion = XxlJobAdminConfig.getAdminConfig()
+                .getXxlJobRegistryDao()
+                .findByVersion(jobInfo.getVersion(), group.getRegistryList());
+            List<String> addresses=new ArrayList<>();
+            for (XxlJobRegistry xxlJobRegistry : byVersion) {
+                addresses.add(xxlJobRegistry.getRegistryValue());
+            }
+            group.setAddressList(String.join(",",addresses));
+        }
 
         // cover addressList
         if (addressList!=null && addressList.trim().length()>0) {
@@ -126,6 +144,7 @@ public class XxlJobTrigger {
         // 2、init trigger-param
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(jobInfo.getId());
+        triggerParam.setVersion(jobInfo.getVersion());
         triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
         triggerParam.setExecutorParams(jobInfo.getExecutorParam());
         triggerParam.setExecutorBlockStrategy(jobInfo.getExecutorBlockStrategy());

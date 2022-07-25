@@ -20,13 +20,17 @@ public interface XxlJobRegistryDao {
 
     public List<XxlJobRegistry> findAll(@Param("timeout") int timeout,
                                         @Param("nowTime") Date nowTime);
-
+    
+    public List<XxlJobRegistry> findByGroup(@Param("groupId")int id,@Param("list")List<String> list);
+    public List<XxlJobRegistry> findByVersion(@Param("registryVersion") String version,@Param("list")List<String> list);
     public int registryUpdate(@Param("registryGroup") String registryGroup,
+                              @Param("registryVersion") String registryVersion,
                               @Param("registryKey") String registryKey,
                               @Param("registryValue") String registryValue,
                               @Param("updateTime") Date updateTime);
 
     public int registrySave(@Param("registryGroup") String registryGroup,
+                            @Param("registryVersion") String registryVersion,
                             @Param("registryKey") String registryKey,
                             @Param("registryValue") String registryValue,
                             @Param("updateTime") Date updateTime);

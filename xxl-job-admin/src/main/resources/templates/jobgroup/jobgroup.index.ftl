@@ -92,7 +92,7 @@
                             <div class="col-sm-10">
                                 <input type="radio" name="addressType" value="0" checked />${I18n.jobgroup_field_addressType_0}
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="addressType" value="1" />${I18n.jobgroup_field_addressType_1}
+<#--                                <input type="radio" name="addressType" value="1" />${I18n.jobgroup_field_addressType_1}-->
                             </div>
                         </div>
                         <div class="form-group">
@@ -136,7 +136,7 @@
                             <div class="col-sm-10">
                                 <input type="radio" name="addressType" value="0" />${I18n.jobgroup_field_addressType_0}
                                 &nbsp;&nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="addressType" value="1" />${I18n.jobgroup_field_addressType_1}
+<#--                                <input type="radio" name="addressType" value="1" />${I18n.jobgroup_field_addressType_1}-->
                             </div>
                         </div>
                         <div class="form-group">

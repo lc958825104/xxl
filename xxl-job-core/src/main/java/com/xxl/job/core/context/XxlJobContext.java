@@ -60,14 +60,15 @@ public class XxlJobContext {
      */
     private String handleMsg;
 
+    private String version;
 
-    public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal) {
+    public XxlJobContext(long jobId, String jobParam, String jobLogFileName, int shardIndex, int shardTotal,String version) {
         this.jobId = jobId;
         this.jobParam = jobParam;
         this.jobLogFileName = jobLogFileName;
         this.shardIndex = shardIndex;
         this.shardTotal = shardTotal;
-
+        this.version=version;
         this.handleCode = HANDLE_CODE_SUCCESS;  // default success
     }
 
@@ -106,7 +107,15 @@ public class XxlJobContext {
     public String getHandleMsg() {
         return handleMsg;
     }
-
+    
+    public String getVersion() {
+        return version;
+    }
+    
+    public void setVersion(String version) {
+        this.version = version;
+    }
+    
     // ---------------------- tool ----------------------
 
     private static InheritableThreadLocal<XxlJobContext> contextHolder = new InheritableThreadLocal<XxlJobContext>(); // support for child thread of job handler)

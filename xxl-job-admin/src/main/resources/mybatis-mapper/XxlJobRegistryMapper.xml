@@ -8,6 +8,7 @@
 	    <result column="registry_group" property="registryGroup" />
 	    <result column="registry_key" property="registryKey" />
 	    <result column="registry_value" property="registryValue" />
+		<result column="registry_version" property="registryVersion" />
 		<result column="update_time" property="updateTime" />
 	</resultMap>
 
@@ -16,6 +17,7 @@
 		t.registry_group,
 		t.registry_key,
 		t.registry_value,
+		t.registry_version,
 		t.update_time
 	</sql>
 
@@ -39,17 +41,43 @@
 		WHERE t.update_time <![CDATA[ > ]]> DATE_ADD(#{nowTime},INTERVAL -#{timeout} SECOND)
 	</select>
 
-    <update id="registryUpdate" >
+	<select id="findByGroup" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_registry AS t
+		INNER JOIN xxl_job_group g on g.id=#{groupId} and g.app_name=t.registry_key
+		where 1=1
+		<if test="list!=null and list.size !='' ">
+			and registry_value in
+			<foreach collection="list" separator="," item="item" open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<select id="findByVersion" parameterType="java.util.HashMap" resultMap="XxlJobRegistry">
+		SELECT <include refid="Base_Column_List" />
+		FROM xxl_job_registry AS t
+		WHERE t.registry_version=#{registryVersion}
+		<if test="list!=null and list.size !='' ">
+			and registry_value in
+			<foreach collection="list" separator="," item="item" open="(" close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+
+	<update id="registryUpdate" >
         UPDATE xxl_job_registry
         SET `update_time` = #{updateTime}
         WHERE `registry_group` = #{registryGroup}
           AND `registry_key` = #{registryKey}
           AND `registry_value` = #{registryValue}
+          AND `registry_version` = #{registryVersion}
     </update>
 
-    <insert id="registrySave" >
-        INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`, `update_time`)
-        VALUES( #{registryGroup}  , #{registryKey} , #{registryValue}, #{updateTime})
+	<insert id="registrySave" >
+        INSERT INTO xxl_job_registry( `registry_group` , `registry_key` , `registry_value`,`registry_version`, `update_time`)
+        VALUES( #{registryGroup}  , #{registryKey} , #{registryValue},#{registryVersion}, #{updateTime})
     </insert>
 
 	<delete id="registryDelete" >

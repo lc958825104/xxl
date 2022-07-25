@@ -193,7 +193,7 @@ public class TriggerCallbackThread {
                     null,
                     logFileName,
                     -1,
-                    -1));
+                    -1,null));
             XxlJobHelper.log(logContent);
         }
     }

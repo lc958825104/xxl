@@ -33,7 +33,15 @@ public class XxlJobHelper {
 
         return xxlJobContext.getJobId();
     }
-
+    
+    public static String getVersion() {
+        XxlJobContext xxlJobContext = XxlJobContext.getXxlJobContext();
+        if (xxlJobContext == null) {
+            return null;
+        }
+        
+        return xxlJobContext.getVersion();
+    }
     /**
      * current JobParam
      *

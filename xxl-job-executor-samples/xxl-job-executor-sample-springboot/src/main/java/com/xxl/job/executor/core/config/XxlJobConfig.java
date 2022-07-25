@@ -53,7 +53,7 @@ public class XxlJobConfig {
         xxlJobSpringExecutor.setAccessToken(accessToken);
         xxlJobSpringExecutor.setLogPath(logPath);
         xxlJobSpringExecutor.setLogRetentionDays(logRetentionDays);
-
+        xxlJobSpringExecutor.setVersion("master");//实际应用中应该从编译插件获得git分支号
         return xxlJobSpringExecutor;
     }
 
