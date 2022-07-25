@@ -4,6 +4,7 @@ import com.xxl.job.admin.core.cron.CronExpression;
 import com.xxl.job.admin.core.exception.XxlJobException;
 import com.xxl.job.admin.core.model.XxlJobGroup;
 import com.xxl.job.admin.core.model.XxlJobInfo;
+import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
@@ -13,12 +14,14 @@ import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.dao.XxlJobGroupDao;
+import com.xxl.job.admin.dao.XxlJobRegistryDao;
 import com.xxl.job.admin.service.LoginService;
 import com.xxl.job.admin.service.XxlJobService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
 import com.xxl.job.core.glue.GlueTypeEnum;
 import com.xxl.job.core.util.DateUtil;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -45,6 +48,8 @@ public class JobInfoController {
 	private XxlJobGroupDao xxlJobGroupDao;
 	@Resource
 	private XxlJobService xxlJobService;
+	@Resource
+	XxlJobRegistryDao xxlJobRegistryDao;
 	
 	@RequestMapping
 	public String index(HttpServletRequest request, Model model, @RequestParam(required = false, defaultValue = "-1") int jobGroup) {
@@ -64,6 +69,28 @@ public class JobInfoController {
 		if (jobGroupList==null || jobGroupList.size()==0) {
 			throw new XxlJobException(I18nUtil.getString("jobgroup_empty"));
 		}
+		if (jobGroup==-1){
+			jobGroup=jobGroupList.get(0).getId();
+		}
+		List<String> list=new ArrayList<>();
+		for (XxlJobGroup group : jobGroupList) {
+			if (group.getId()==jobGroup){
+				if (group.getAddressList()!=null){
+					String[] split = group.getAddressList().split(",");
+					if (split.length>0){
+						list=new ArrayList<String>(Arrays.asList(split)) ;
+					}
+				}
+			}
+		}
+		
+		if (list.size()>0) {
+			List<XxlJobRegistry> registryList = xxlJobRegistryDao
+				.findByGroup(jobGroup, list);
+			List<XxlJobRegistry> distinct = registryList.stream().collect(Collectors.collectingAndThen(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(o -> o.getRegistryValue() + ";" + o.getRegistryVersion()))), ArrayList::new));
+			model.addAttribute("registryList",distinct);
+		}
+		//这里可以去重，必要不大
 
 		model.addAttribute("JobGroupList", jobGroupList);
 		model.addAttribute("jobGroup", jobGroup);
@@ -140,13 +167,13 @@ public class JobInfoController {
 	@RequestMapping("/trigger")
 	@ResponseBody
 	//@PermissionLimit(limit = false)
-	public ReturnT<String> triggerJob(int id, String executorParam, String addressList) {
+	public ReturnT<String> triggerJob(int id, String executorParam, String addressList,String version) {
 		// force cover job param
 		if (executorParam == null) {
 			executorParam = "";
 		}
 
-		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList);
+		JobTriggerPoolHelper.trigger(id, TriggerTypeEnum.MANUAL, -1, null, executorParam, addressList,version);
 		return ReturnT.SUCCESS;
 	}
 

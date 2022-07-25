@@ -266,7 +266,17 @@ $(function() {
 
         $("#jobTriggerModal .form input[name='id']").val( row.id );
         $("#jobTriggerModal .form textarea[name='executorParam']").val( row.executorParam );
-
+				let b=false;
+				$("#jobTriggerModal .form select[name=registry] option").each(function(){
+					var txt = $(this).val();
+					if (txt==row.version){
+						$(this).prop('selected', true);
+						b=true;
+					}
+				});
+				if(!b){
+					$('#jobTriggerModal .form select[name=registry] option[value=default]').prop('selected', true);
+				}
         $('#jobTriggerModal').modal({backdrop: false, keyboard: false}).modal('show');
     });
     $("#jobTriggerModal .ok").on('click',function() {
@@ -276,7 +286,8 @@ $(function() {
             data : {
                 "id" : $("#jobTriggerModal .form input[name='id']").val(),
                 "executorParam" : $("#jobTriggerModal .textarea[name='executorParam']").val(),
-				"addressList" : $("#jobTriggerModal .textarea[name='addressList']").val()
+								"addressList" : $("#jobTriggerModal .textarea[name='addressList']").val(),
+							  "version": $("#registry").find("option:selected").val()
             },
             dataType : "json",
             success : function(data){
@@ -576,7 +587,18 @@ $(function() {
 		$('#updateModal .form select[name=executorBlockStrategy] option[value='+ row.executorBlockStrategy +']').prop('selected', true);
 		$("#updateModal .form input[name='executorTimeout']").val( row.executorTimeout );
         $("#updateModal .form input[name='executorFailRetryCount']").val( row.executorFailRetryCount );
-
+		//select version
+		let b=false;
+		$("#updateModal .form select[name=version] option").each(function(){
+			var txt = $(this).val();
+			if (txt==row.version){
+				$(this).prop('selected', true);
+				b=true;
+			}
+		});
+		if(!b){
+			$('#updateModal .form select[name=version] option[value=default]').prop('selected', true);
+		}
 		// show
 		$('#updateModal').modal({backdrop: false, keyboard: false}).modal('show');
 	});

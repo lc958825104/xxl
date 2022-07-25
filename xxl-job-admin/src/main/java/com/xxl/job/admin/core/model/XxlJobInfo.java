@@ -14,6 +14,8 @@ public class XxlJobInfo {
 	private int jobGroup;		// 执行器主键ID
 	private String jobDesc;
 	
+	private String version;
+	
 	private Date addTime;
 	private Date updateTime;
 	
@@ -66,7 +68,15 @@ public class XxlJobInfo {
 	public void setJobDesc(String jobDesc) {
 		this.jobDesc = jobDesc;
 	}
-
+	
+	public String getVersion() {
+		return version;
+	}
+	
+	public void setVersion(String version) {
+		this.version = version;
+	}
+	
 	public Date getAddTime() {
 		return addTime;
 	}

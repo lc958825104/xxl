@@ -190,7 +190,19 @@
 
                     <br>
                     <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_advanced}</p>    <#-- 高级配置 -->
-
+                    <div class="form-group">
+                      <label for="firstname" class="col-sm-2 control-label">分支隔离<font color="black">*</font></label>
+                      <div class="col-sm-4">
+                        <select class="form-control" name="version" >
+                          <option value="default" selected>--default--</option>
+                            <#if registryList?exists>
+                                <#list registryList as registry>
+                                  <option value="${(registry.registryVersion)!'null'}">${(registry.registryVersion)!'null'}--${registry.registryValue}</option>
+                                </#list>
+                            </#if>
+                        </select>
+                      </div>
+                    </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorRouteStrategy}<font color="black">*</font></label>
                         <div class="col-sm-4">
@@ -435,7 +447,19 @@ exit 0
 
                     <br>
                     <p style="margin: 0 0 10px;text-align: left;border-bottom: 1px solid #e5e5e5;color: gray;">${I18n.jobinfo_conf_advanced}</p>    <#-- 高级配置 -->
-
+                    <div class="form-group">
+                      <label for="firstname" class="col-sm-2 control-label">分支隔离<font color="black">*</font></label>
+                      <div class="col-sm-4">
+                        <select class="form-control" name="version" >
+                          <option value="default" selected>--default--</option>
+                            <#if registryList?exists>
+                                <#list registryList as registry>
+                                  <option value="${(registry.registryVersion)!'null'}">${(registry.registryVersion)!'null'}--${registry.registryValue}</option>
+                                </#list>
+                            </#if>
+                        </select>
+                      </div>
+                    </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorRouteStrategy}<font color="red">*</font></label>
                         <div class="col-sm-4">
@@ -501,6 +525,19 @@ exit 0
             </div>
             <div class="modal-body">
                 <form class="form-horizontal form" role="form" >
+                    <div class="form-group">
+                      <label for="firstname" class="col-sm-2 control-label">分支隔离<font color="black">*</font></label>
+                      <div class="col-sm-4">
+                        <select class="form-control" id="registry" name="registry" >
+                          <option value="default" selected>--default--</option>
+                            <#if registryList?exists>
+                                <#list registryList as registry>
+                                  <option value="${(registry.registryVersion)!'null'}">${(registry.registryVersion)!'null'}--${registry.registryValue}</option>
+                                </#list>
+                            </#if>
+                        </select>
+                      </div>
+                    </div>
                     <div class="form-group">
                         <label for="firstname" class="col-sm-2 control-label">${I18n.jobinfo_field_executorparam}<font color="black">*</font></label>
                         <div class="col-sm-10">
