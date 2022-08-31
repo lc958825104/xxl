@@ -59,12 +59,11 @@
 	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT in(
-			SELECT id FROM(
-				SELECT id FROM xxl_job_logglue
+			SELECT id FROM (
+				SELECT id, rownum rn FROM xxl_job_logglue
 				WHERE job_id = #{jobId}
 				ORDER BY update_time desc
-				LIMIT 0, #{limit}
-			) t1
+			) where rn <![CDATA[ <= ]]> #{limit}
 		) AND job_id = #{jobId}
 	</delete>
 	
