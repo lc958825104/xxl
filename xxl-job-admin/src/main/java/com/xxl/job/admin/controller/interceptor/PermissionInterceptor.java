@@ -4,6 +4,7 @@ import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.model.XxlJobUser;
 import com.xxl.job.admin.core.util.I18nUtil;
 import com.xxl.job.admin.service.LoginService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
@@ -20,13 +21,16 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class PermissionInterceptor implements AsyncHandlerInterceptor {
 
+	@Value("${xxl.job.admin.permissionEnable:true}")
+	private boolean permissionEnable;
+
 	@Resource
 	private LoginService loginService;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		
-		if (!(handler instanceof HandlerMethod)) {
+		if (!permissionEnable || !(handler instanceof HandlerMethod)) {
 			return true;	// proceed with the next interceptor
 		}
 

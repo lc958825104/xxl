@@ -7,7 +7,7 @@
 		<result column="id" property="id" />
 	    <result column="job_id" property="jobId" />
 		<result column="glue_type" property="glueType" />
-	    <result column="glue_source" property="glueSource" />
+	    <result column="glue_source" property="glueSource" jdbcType="CLOB" javaType="java.lang.String" />
 	    <result column="glue_remark" property="glueRemark" />
 	    <result column="add_time" property="addTime" />
 	    <result column="update_time" property="updateTime" />
@@ -23,22 +23,27 @@
 		t.update_time
 	</sql>
 	
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobLogGlue">
+		<selectKey resultType="int" keyProperty="id" order="BEFORE">
+			select SEQ_XXL_JOB_LOG_ID.NEXTVAL id from dual
+		</selectKey>
 		INSERT INTO xxl_job_logglue (
-			`job_id`,
-			`glue_type`,
-			`glue_source`,
-			`glue_remark`,
-			`add_time`, 
-			`update_time`
+			id,
+			job_id,
+			glue_type,
+			glue_source,
+			glue_remark,
+			add_time,
+			update_time
 		) VALUES (
+			#{id},
 			#{jobId},
 			#{glueType},
-			#{glueSource},
+			#{glueSource, jdbcType=CLOB, javaType=java.lang.String},
 			#{glueRemark},
 			#{addTime},
 			#{updateTime}
-		);
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID() 
 		</selectKey>-->
@@ -46,7 +51,7 @@
 	
 	<select id="findByJobId" parameterType="java.lang.Integer" resultMap="XxlJobLogGlue">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_logglue AS t
+		FROM xxl_job_logglue t
 		WHERE t.job_id = #{jobId}
 		ORDER BY id DESC
 	</select>
@@ -54,18 +59,17 @@
 	<delete id="removeOld" >
 		DELETE FROM xxl_job_logglue
 		WHERE id NOT in(
-			SELECT id FROM(
-				SELECT id FROM xxl_job_logglue
-				WHERE `job_id` = #{jobId}
+			SELECT id FROM (
+				SELECT id, rownum rn FROM xxl_job_logglue
+				WHERE job_id = #{jobId}
 				ORDER BY update_time desc
-				LIMIT 0, #{limit}
-			) t1
-		) AND `job_id` = #{jobId}
+			) where rn <![CDATA[ <= ]]> #{limit}
+		) AND job_id = #{jobId}
 	</delete>
 	
 	<delete id="deleteByJobId" parameterType="java.lang.Integer" >
 		DELETE FROM xxl_job_logglue
-		WHERE `job_id` = #{jobId}
+		WHERE job_id = #{jobId}
 	</delete>
 	
 </mapper>

@@ -1,0 +1,85 @@
+server:
+  port: 16025
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: xxl-job-admin
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1 FROM DUAL
+      connection-timeout: 10000
+      idle-timeout: 30000
+      max-lifetime: 900000
+      maximum-pool-size: 30
+      minimum-idle: 10
+      pool-name: HikariCP
+      validation-timeout: 1000
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:oracle:thin:@//192.168.11.40:1521/crms
+    password: qw1112
+    username: dms2
+  freemarker:
+    charset: UTF-8
+    request-context-attribute: request
+    settings:
+      number_format: 0.##########
+    suffix: .ftl
+    templateLoaderPath: classpath:/templates/
+  mail:
+    from: xxx@qq.com
+    host: smtp.qq.com
+    password: xxx
+    port: 25
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+          starttls:
+            enable: true
+            required: true
+    username: xxx@qq.com
+  mvc:
+    servlet:
+      load-on-startup: 0
+    static-path-pattern: /static/**
+  web:
+    resources:
+      static-locations: classpath:/static/
+xxl:
+  job:
+    accessToken: default_token
+    admin:
+      addresses: http://127.0.0.1:${server.port}${server.servlet.context-path}
+    executor:
+      address: ''
+      appname: ${spring.application.name}
+      ip: ''
+      logpath: ${logging.file.path}/jobhandler
+      logretentiondays: 30
+      port: 16024
+    i18n: zh_CN
+    logretentiondays: 30
+    triggerpool:
+      fast:
+        max: 200
+      slow:
+        max: 100
+management:
+  health:
+    mail:
+      enabled: false
+  server:
+    base-path: /actuator
+mybatis:
+  configuration:
+    jdbc-type-for-null: 'null'
+  mapper-locations: classpath:/mybatis-mapper/*Mapper.xml
+
+logging:
+  file:
+    path: /home/desuo/logs/${spring.application.name}/${server.port}

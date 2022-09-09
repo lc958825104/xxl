@@ -27,7 +27,7 @@
 		<result column="executor_fail_retry_count" property="executorFailRetryCount" />
 
 	    <result column="glue_type" property="glueType" />
-	    <result column="glue_source" property="glueSource" />
+	    <result column="glue_source" property="glueSource" jdbcType="CLOB" javaType="java.lang.String" />
 	    <result column="glue_remark" property="glueRemark" />
 		<result column="glue_updatetime" property="glueUpdatetime" />
 
@@ -66,8 +66,12 @@
 	</sql>
 
 	<select id="pageList" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		select * from (
+		select * from (
+		select A.*, rownum rn from (
+
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -86,12 +90,15 @@
 			</if>
 		</trim>
 		ORDER BY id DESC
-		LIMIT #{offset}, #{pagesize}
+
+		) A
+		) where rn <![CDATA[ > ]]> #{offset}
+		) where rn <![CDATA[ <= ]]> #{offset} + #{pagesize}
 	</select>
 
 	<select id="pageListCount" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(1)
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		<trim prefix="WHERE" prefixOverrides="AND | OR" >
 			<if test="jobGroup gt 0">
 				AND t.job_group = #{jobGroup}
@@ -111,8 +118,12 @@
 		</trim>
 	</select>
 
-	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo" useGeneratedKeys="true" keyProperty="id" >
+	<insert id="save" parameterType="com.xxl.job.admin.core.model.XxlJobInfo">
+		<selectKey resultType="int" keyProperty="id" order="BEFORE">
+			select SEQ_XXL_JOB_COMMON_ID.NEXTVAL id from dual
+		</selectKey>
 		INSERT INTO xxl_job_info (
+		    id,
 			job_group,
 			job_desc,
 			add_time,
@@ -137,7 +148,8 @@
 			trigger_last_time,
 			trigger_next_time
 		) VALUES (
-			#{jobGroup},
+			#{id},
+		    #{jobGroup},
 			#{jobDesc},
 			#{addTime},
 			#{updateTime},
@@ -153,23 +165,23 @@
 			#{executorTimeout},
 			#{executorFailRetryCount},
 			#{glueType},
-			#{glueSource},
+			#{glueSource, jdbcType=CLOB, javaType=java.lang.String},
 			#{glueRemark},
 			#{glueUpdatetime},
 			#{childJobId},
 			#{triggerStatus},
 			#{triggerLastTime},
 			#{triggerNextTime}
-		);
+		)
 		<!--<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
-			/*SELECT @@IDENTITY AS id*/
+			/*SELECT @@IDENTITY id*/
 		</selectKey>-->
 	</insert>
 
 	<select id="loadById" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.id = #{id}
 	</select>
 
@@ -191,7 +203,7 @@
 			executor_timeout = ${executorTimeout},
 			executor_fail_retry_count = ${executorFailRetryCount},
 			glue_type = #{glueType},
-			glue_source = #{glueSource},
+			glue_source = #{glueSource, jdbcType=CLOB, javaType=java.lang.String},
 			glue_remark = #{glueRemark},
 			glue_updatetime = #{glueUpdatetime},
 			child_jobid = #{childJobId},
@@ -209,7 +221,7 @@
 
 	<select id="getJobsByGroup" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.job_group = #{jobGroup}
 	</select>
 
@@ -220,12 +232,17 @@
 
 
 	<select id="scheduleJobQuery" parameterType="java.util.HashMap" resultMap="XxlJobInfo">
+		select * from (
+		select A.*, rownum rn from (
+
 		SELECT <include refid="Base_Column_List" />
-		FROM xxl_job_info AS t
+		FROM xxl_job_info t
 		WHERE t.trigger_status = 1
 			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
 		ORDER BY id ASC
-		LIMIT #{pagesize}
+
+		) A
+		) where rn <![CDATA[ <= ]]> #{pagesize}
 	</select>
 
 	<update id="scheduleUpdate" parameterType="com.xxl.job.admin.core.model.XxlJobInfo"  >
