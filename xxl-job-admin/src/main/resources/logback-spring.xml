@@ -2,7 +2,7 @@
 <configuration debug="false" scan="true" scanPeriod="1 seconds">
 
     <contextName>logback</contextName>
-    <property name="log.path" value="/data/applogs/xxl-job/xxl-job-admin.log"/>
+    <springProperty scope="context" name="log.path" source="logging.file.path" defaultValue="/home/desuo/logs/xxl-job-admin/16025/" />
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -11,7 +11,7 @@
     </appender>
 
     <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}</file>
+        <file>${log.path}/xxl-job-admin.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${log.path}.%d{yyyy-MM-dd}.zip</fileNamePattern>
         </rollingPolicy>
