@@ -86,6 +86,9 @@ XXL-JOB是一个分布式任务调度平台，其核心设计目标是开发迅�
 - 34、线程池隔离：调度线程池进行隔离拆分，慢任务自动降级进入"Slow"线程池，避免耗尽调度线程，提高系统稳定性；
 - 35、用户管理：支持在线管理系统用户，存在管理员、普通用户两种角色；
 - 36、权限控制：执行器维度进行权限控制，管理员拥有全量权限，普通用户需要分配执行器权限后才允许相关操作；
+- 37 GLUESQL支持: 支持界面编写sql executor端需要实现SQLJobHandler,
+    可以参考xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java/com/xxl/job/executor/service/jobhandler/MYSQLJobHandler.java 
+    多sql实现需要注意修改com.xxl.job.core.biz.impl.ExecutorBizImpl 中的134行
 
 
 ## Development
