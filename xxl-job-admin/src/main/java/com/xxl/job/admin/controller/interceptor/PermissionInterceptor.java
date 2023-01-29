@@ -27,7 +27,8 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		
 		if (!(handler instanceof HandlerMethod)) {
-			return true;	// proceed with the next interceptor
+			// proceed with the next interceptor
+			return true;
 		}
 
 		// if need login
@@ -53,7 +54,8 @@ public class PermissionInterceptor implements AsyncHandlerInterceptor {
 			request.setAttribute(LoginService.LOGIN_IDENTITY_KEY, loginUser);
 		}
 
-		return true;	// proceed with the next interceptor
+		// proceed with the next interceptor
+		return true;
 	}
 	
 }
