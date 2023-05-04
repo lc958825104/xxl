@@ -299,6 +299,30 @@ logging.basicConfig(level=logging.DEBUG)
 logging.info("脚本文件：" + sys.argv[0])
 -->
 </textarea>
+<textarea class="glueSource_python3" style="display:none;" >
+#!/usr/bin/python3
+# -*- coding: UTF-8 -*-
+import time
+import sys
+
+print "xxl-job: hello python"
+
+print "${I18n.jobinfo_script_location}：", sys.argv[0]
+print "${I18n.jobinfo_field_executorparam}：", sys.argv[1]
+print "${I18n.jobinfo_shard_index}：", sys.argv[2]
+print "${I18n.jobinfo_shard_total}：", sys.argv[3]
+<#--for i in range(1, len(sys.argv)):
+	time.sleep(1)
+	print "参数", i, sys.argv[i]-->
+
+print "Good bye!"
+exit(0)
+<#--
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logging.info("脚本文件：" + sys.argv[0])
+-->
+</textarea>
 <#--这里有问题，新建一个运行模式为 php 的任务后，GLUE 中没有下边的 php 代码-->
 <textarea class="glueSource_php" style="display:none;" >
 <?php
