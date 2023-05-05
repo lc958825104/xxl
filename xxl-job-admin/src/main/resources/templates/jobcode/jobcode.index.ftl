@@ -130,7 +130,7 @@
     <#elseif jobInfo.glueType == "GLUE_SHELL" >
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/shell/shell.js" />
         <#assign glueTypeIdeMode = "text/x-sh" />
-    <#elseif jobInfo.glueType == "GLUE_PYTHON" >
+    <#elseif jobInfo.glueType == "GLUE_PYTHON" || jobInfo.glueType == "GLUE_PYTHON3">
         <#assign glueTypeModeSrc = "${request.contextPath}/static/plugins/codemirror/mode/python/python.js" />
         <#assign glueTypeIdeMode = "text/x-python" />
     <#elseif jobInfo.glueType == "GLUE_PHP" >
