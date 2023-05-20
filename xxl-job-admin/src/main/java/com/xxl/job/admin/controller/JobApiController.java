@@ -2,10 +2,13 @@ package com.xxl.job.admin.controller;
 
 import com.xxl.job.admin.controller.annotation.PermissionLimit;
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
+import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.core.biz.AdminBiz;
 import com.xxl.job.core.biz.model.HandleCallbackParam;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
+import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.job.core.util.GsonTool;
 import com.xxl.job.core.util.XxlJobRemotingUtil;
 import org.springframework.stereotype.Controller;
@@ -63,7 +66,13 @@ public class JobApiController {
         } else if ("registryRemove".equals(uri)) {
             RegistryParam registryParam = GsonTool.fromJson(data, RegistryParam.class);
             return adminBiz.registryRemove(registryParam);
-        } else {
+        }else if ("trigger".equals(uri)){
+            // 触发 执行 定时任务
+            TriggerParam triggerParam  = GsonTool.fromJson(data, TriggerParam.class);
+            JobTriggerPoolHelper.trigger(triggerParam.getJobId(), TriggerTypeEnum.API, -1, null,
+                    triggerParam.getExecutorParams(), null);
+            return ReturnT.SUCCESS;
+        }else {
             return new ReturnT<String>(ReturnT.FAIL_CODE, "invalid request, uri-mapping("+ uri +") not found.");
         }
 
