@@ -84,6 +84,7 @@ public class ExecutorRegistryThread {
                             ReturnT<String> registryResult = adminBiz.registryRemove(registryParam);
                             if (registryResult!=null && ReturnT.SUCCESS_CODE == registryResult.getCode()) {
                                 registryResult = ReturnT.SUCCESS;
+                                toStop = false;
                                 logger.info(">>>>>>>>>>> xxl-job registry-remove success, registryParam:{}, registryResult:{}", new Object[]{registryParam, registryResult});
                                 break;
                             } else {
