@@ -80,7 +80,7 @@ public class AverageJobAllocation implements JobAllocation {
 
             recursion(0, conn);
         } catch (Exception e) {
-            logger.error(">>>>>>>>>>> xxl-job, JobScheduleHelper#scheduleThread error:{}", e);
+            logger.error(">>>>>>>>>>> xxl-job, cluster flush error:{}", e);
         } finally {
             // commit
             if (conn != null) {
@@ -147,3 +147,4 @@ public class AverageJobAllocation implements JobAllocation {
     }
 
 }
+
