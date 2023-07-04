@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author xuxueli 2019-05-21
@@ -77,8 +78,25 @@ public class JobScheduleHelper {
 
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
-                        if (scheduleList!=null && scheduleList.size()>0) {
+                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount
+                                , XxlJobAdminConfig.getAdminConfig().getHostName(),
+                                XxlJobAdminConfig.getAdminConfig().isClusterEnable());
+                        if (scheduleList!=null && !scheduleList.isEmpty()) {
+
+                            if(XxlJobAdminConfig.getAdminConfig().isClusterEnable()) {
+                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().updateStatusById(scheduleList.stream()
+                                        .map(XxlJobInfo::getId).collect(Collectors.toList()));
+
+                                try {
+                                    conn.commit();
+                                } catch (SQLException e) {
+                                    if (!scheduleThreadToStop) {
+                                        logger.error(e.getMessage(), e);
+                                    }
+                                }
+                            }
+
+
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
 
@@ -140,6 +158,7 @@ public class JobScheduleHelper {
 
                             // 3、update trigger info
                             for (XxlJobInfo jobInfo: scheduleList) {
+                                jobInfo.setLockStatus(0);
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
                             }
 

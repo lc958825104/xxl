@@ -41,9 +41,20 @@ public interface XxlJobInfoDao {
 
 	public int findAllCount();
 
-	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize );
+	public List<XxlJobInfo> scheduleJobQuery(@Param("maxNextTime") long maxNextTime, @Param("pagesize") int pagesize,
+											 @Param("hostName") String ip,@Param("clusterEnable") boolean clusterEnable);
 
 	public int scheduleUpdate(XxlJobInfo xxlJobInfo);
+
+	void updateStatusById(@Param("list") List<Integer> collect);
+
+	List<XxlJobInfo> pageById(@Param("id") Integer id);
+
+	void updateHostNameByIds(@Param("hostName") String k, @Param("ids") List<Integer> v);
+
+	void initLockStatus(@Param("hostName") String hostName,@Param("init") boolean init);
+
+	XxlJobInfo findOldClusterInfo();
 
 
 }

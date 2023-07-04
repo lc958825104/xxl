@@ -42,6 +42,10 @@ public class XxlJobInfo {
 	private long triggerLastTime;	// 上次调度时间
 	private long triggerNextTime;	// 下次调度时间
 
+	private String hostName;	// 运行实例名称
+
+	private int lockStatus;
+
 
 	public int getId() {
 		return id;
@@ -233,5 +237,21 @@ public class XxlJobInfo {
 
 	public void setTriggerNextTime(long triggerNextTime) {
 		this.triggerNextTime = triggerNextTime;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public int getLockStatus() {
+		return lockStatus;
+	}
+
+	public void setLockStatus(int lockStatus) {
+		this.lockStatus = lockStatus;
 	}
 }

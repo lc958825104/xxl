@@ -36,6 +36,9 @@
 		<result column="trigger_status" property="triggerStatus" />
 		<result column="trigger_last_time" property="triggerLastTime" />
 		<result column="trigger_next_time" property="triggerNextTime" />
+
+		<result column="host_name" property="hostName" />
+		<result column="lock_status" property="lockStatus" />
 	</resultMap>
 
 	<sql id="Base_Column_List">
@@ -224,6 +227,10 @@
 		FROM xxl_job_info AS t
 		WHERE t.trigger_status = 1
 			and t.trigger_next_time <![CDATA[ <= ]]> #{maxNextTime}
+		<if test="clusterEnable == true">
+			and t.host_name=#{hostName}
+			and t.lock_status=0
+		</if>
 		ORDER BY id ASC
 		LIMIT #{pagesize}
 	</select>
@@ -233,8 +240,40 @@
 		SET
 			trigger_last_time = #{triggerLastTime},
 			trigger_next_time = #{triggerNextTime},
-			trigger_status = #{triggerStatus}
+			trigger_status = #{triggerStatus},
+			lock_status=#{lockStatus}
 		WHERE id = #{id}
 	</update>
 
+	<select id="pageById" resultMap="XxlJobInfo">
+		select id,trigger_next_time,host_name from xxl_job_info where id>#{id} and trigger_status=1 order by id limit 2000
+	</select>
+	<select id="findOldClusterInfo" resultMap="XxlJobInfo">
+		select a.* from xxl_job_info a left join xxl_job_cluster b on a.host_name =b.host_name
+			and b.update_time >=DATE_SUB(now(),INTERVAL 1 MINUTE)
+		where b.host_name is null and a.trigger_status = 1 limit 1
+	</select>
+	<update id="updateStatusById">
+		update xxl_job_info set lock_status = 1
+		where id in
+		<foreach collection="list" item="id" open="(" close=")" separator="," >
+			#{id}
+		</foreach>
+	</update>
+	<update id="updateHostNameByIds">
+		update xxl_job_info set host_name = #{hostName}
+		where id in
+		<foreach collection="ids" item="id" open="(" close=")" separator="," >
+			#{id}
+		</foreach>
+	</update>
+	<update id="initLockStatus">
+		update xxl_job_info a left join xxl_job_cluster b on a.host_name =b.host_name and b.update_time>=DATE_SUB(now(),INTERVAL 1 MINUTE)
+		set a.lock_status = 0
+		where (b.host_name is null
+		<if test="init == true">
+			or a.host_name =#{hostName}
+		</if>
+		) and a.lock_status=1
+	</update>
 </mapper>

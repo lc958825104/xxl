@@ -1,8 +1,13 @@
 package com.xxl.job.admin.core.conf;
 
 import com.xxl.job.admin.core.alarm.JobAlarmer;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.scheduler.XxlJobScheduler;
 import com.xxl.job.admin.dao.*;
+import com.xxl.job.admin.service.JobAllocation;
+import com.xxl.job.admin.service.impl.AverageJobAllocation;
+import com.xxl.job.core.util.IpUtil;
+import io.micrometer.core.instrument.util.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,8 +41,11 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     public void afterPropertiesSet() throws Exception {
         adminConfig = this;
 
+        getJobAllocation().init(true);
         xxlJobScheduler = new XxlJobScheduler();
         xxlJobScheduler.init();
+        getJobAllocation().flush();
+
     }
 
     @Override
@@ -67,6 +75,16 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     @Value("${xxl.job.logretentiondays}")
     private int logretentiondays;
 
+
+    @Value("${xxl.job.cluster.host.name}")
+    private String hostName;
+
+    @Value("${server.port}")
+    private int port;
+
+    @Value("${xxl.job.cluster.enable:false}")
+    private boolean clusterEnable;
+
     // dao, service
 
     @Resource
@@ -79,12 +97,32 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     private XxlJobGroupDao xxlJobGroupDao;
     @Resource
     private XxlJobLogReportDao xxlJobLogReportDao;
+
+    @Resource
+    private XxlJobClusterDao xxlJobClusterDao;
     @Resource
     private JavaMailSender mailSender;
     @Resource
     private DataSource dataSource;
     @Resource
     private JobAlarmer jobAlarmer;
+
+    private JobAllocation jobAllocation = defaultJobAllocation;
+
+    public String getHostName() {
+        return StringUtils.isBlank(hostName) ? IpUtil.getIpPort(port) : hostName;
+    }
+
+
+    private static JobAllocation defaultJobAllocation = new JobAllocation() {
+        @Override
+        public void allocation(XxlJobInfo jobInfo) {
+        }
+
+        @Override
+        public void init(boolean init) {
+        }
+    };
 
 
     public String getI18n() {
@@ -153,6 +191,22 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
 
     public JobAlarmer getJobAlarmer() {
         return jobAlarmer;
+    }
+
+    public XxlJobClusterDao getXxlJobClusterDao() {
+        return xxlJobClusterDao;
+    }
+
+    public JobAllocation getJobAllocation() {
+        return jobAllocation.equals(defaultJobAllocation) && clusterEnable ? new AverageJobAllocation() : defaultJobAllocation;
+    }
+
+    public void setJobAllocation(JobAllocation jobAllocation) {
+        this.jobAllocation = jobAllocation;
+    }
+
+    public boolean isClusterEnable() {
+        return clusterEnable;
     }
 
 }
