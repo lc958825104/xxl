@@ -6,6 +6,7 @@ import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.scheduler.MisfireStrategyEnum;
 import com.xxl.job.admin.core.scheduler.ScheduleTypeEnum;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
+import com.xxl.job.core.util.IpUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author xuxueli 2019-05-21
@@ -79,8 +81,24 @@ public class JobScheduleHelper {
                         // 1、pre read
                         long nowTime = System.currentTimeMillis();
                         //TODO 下次执行时间 在5秒内的  整个框架的核心
-                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount);
+                        List<XxlJobInfo> scheduleList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao()
+                                .scheduleJobQuery(nowTime + PRE_READ_MS, preReadCount, XxlJobAdminConfig.getAdminConfig().getHostName(),
+                                        XxlJobAdminConfig.getAdminConfig().isClusterEnable());
                         if (scheduleList!=null && scheduleList.size()>0) {
+
+                            if(XxlJobAdminConfig.getAdminConfig().isClusterEnable()) {
+                                XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().updateStatusById(scheduleList.stream()
+                                        .map(XxlJobInfo::getId).collect(Collectors.toList()));
+
+                                try {
+                                    conn.commit();
+                                } catch (SQLException e) {
+                                    if (!scheduleThreadToStop) {
+                                        logger.error(e.getMessage(), e);
+                                    }
+                                }
+                            }
+                            scheduleList.forEach(x->logger.info(x.getId()+""));
                             // 2、push time-ring
                             for (XxlJobInfo jobInfo: scheduleList) {
 
@@ -154,6 +172,7 @@ public class JobScheduleHelper {
 
                             // 3、update trigger info
                             for (XxlJobInfo jobInfo: scheduleList) {
+                                jobInfo.setLockStatus(0);
                                 XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().scheduleUpdate(jobInfo);
                             }
 

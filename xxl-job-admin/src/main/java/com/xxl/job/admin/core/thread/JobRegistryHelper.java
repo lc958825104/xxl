@@ -1,17 +1,23 @@
 package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.XxlJobCluster;
 import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.util.DateUtil;
+import com.xxl.job.core.util.IpUtil;
+import org.apache.catalina.startup.HostConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * job registry instance
@@ -26,8 +32,17 @@ public class JobRegistryHelper {
 	}
 
 	private ThreadPoolExecutor registryOrRemoveThreadPool = null;
+	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+		@Override
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "cluster host registry");
+		}
+	});
+
 	private Thread registryMonitorThread;
 	private volatile boolean toStop = false;
+
+
 
 	public void start(){
 
@@ -131,6 +146,29 @@ public class JobRegistryHelper {
 		registryMonitorThread.setDaemon(true);
 		registryMonitorThread.setName("xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread");
 		registryMonitorThread.start();
+
+
+		this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					XxlJobAdminConfig.getAdminConfig().getXxlJobClusterDao().replace(XxlJobAdminConfig.getAdminConfig().getHostName());
+
+					Date date = new Date();
+
+					XxlJobAdminConfig.getAdminConfig().getXxlJobClusterDao().delete(DateUtil.addMinutes(date,-5));
+
+					XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().findOldClusterInfo();
+					if(jobInfo!=null){
+						XxlJobAdminConfig.getAdminConfig().getJobAllocation().init(false);
+						XxlJobAdminConfig.getAdminConfig().getJobAllocation().flush();
+					}
+				} catch (Exception e) {
+					logger.error("ScheduledTask fetchNameServerAddr exception", e);
+				}
+			}
+		}, 0, 1000 * 30, TimeUnit.MILLISECONDS);
 	}
 
 	public void toStop(){
