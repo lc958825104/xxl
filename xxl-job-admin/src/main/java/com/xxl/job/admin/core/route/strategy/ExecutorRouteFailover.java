@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by xuxueli on 17/3/10.
+ * 通过调用 客户端 beat接口 返回第一个SUCCESS的
  */
 public class ExecutorRouteFailover extends ExecutorRouter {
 

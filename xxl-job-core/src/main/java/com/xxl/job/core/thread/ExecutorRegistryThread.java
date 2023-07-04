@@ -34,7 +34,7 @@ public class ExecutorRegistryThread {
             logger.warn(">>>>>>>>>>> xxl-job, executor registry config fail, adminAddresses is null.");
             return;
         }
-
+        //开启线程往服务器注册 每隔30秒请求一次
         registryThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -76,7 +76,7 @@ public class ExecutorRegistryThread {
                     }
                 }
 
-                // registry remove
+                // TODO registry remove 如果当前服务中止  则会立刻调用 移除接口
                 try {
                     RegistryParam registryParam = new RegistryParam(RegistryConfig.RegistType.EXECUTOR.name(), appname, address);
                     for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {

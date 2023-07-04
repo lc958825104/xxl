@@ -30,7 +30,7 @@ public class JobTriggerPoolHelper {
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolFastMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(1000),
+                new LinkedBlockingQueue<Runnable>(10000),
                 new ThreadFactory() {
                     @Override
                     public Thread newThread(Runnable r) {
@@ -43,7 +43,7 @@ public class JobTriggerPoolHelper {
                 XxlJobAdminConfig.getAdminConfig().getTriggerPoolSlowMax(),
                 60L,
                 TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(2000),
+                new LinkedBlockingQueue<Runnable>(20000),
                 new ThreadFactory() {
                     @Override
                     public Thread newThread(Runnable r) {
@@ -79,6 +79,7 @@ public class JobTriggerPoolHelper {
         // choose thread pool
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
         AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
+        //慢任务 超过 10次 则调用单独的线程池
         if (jobTimeoutCount!=null && jobTimeoutCount.get() > 10) {      // job-timeout 10 times in 1 min
             triggerPool_ = slowTriggerPool;
         }
@@ -97,6 +98,7 @@ public class JobTriggerPoolHelper {
                     logger.error(e.getMessage(), e);
                 } finally {
 
+                    //TODO 统计1分钟内 调用超过500ms的
                     // check timeout-count-map
                     long minTim_now = System.currentTimeMillis()/60000;
                     if (minTim != minTim_now) {

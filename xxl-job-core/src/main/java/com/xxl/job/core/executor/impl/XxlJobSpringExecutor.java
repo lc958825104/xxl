@@ -28,6 +28,10 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
 
 
     // start
+
+    /**
+     * 所有单例初始化以后调用
+     */
     @Override
     public void afterSingletonsInstantiated() {
 
@@ -35,13 +39,15 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         /*initJobHandlerRepository(applicationContext);*/
 
         // init JobHandler Repository (for method)
+        //初始化xxljob注解对象
         initJobHandlerMethodRepository(applicationContext);
 
-        // refresh GlueFactory
+        //初始化  glueFactory 用于执行groovy脚本
         GlueFactory.refreshInstance(1);
 
         // super start
         try {
+            //TODO
             super.start();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -77,6 +83,10 @@ public class XxlJobSpringExecutor extends XxlJobExecutor implements ApplicationC
         }
     }*/
 
+    /**
+     * 扫描有XxlJob 注解的方法 保存到 XxlJobExecutor.jobHandlerRepository(map)
+     * @param applicationContext
+     */
     private void initJobHandlerMethodRepository(ApplicationContext applicationContext) {
         if (applicationContext == null) {
             return;

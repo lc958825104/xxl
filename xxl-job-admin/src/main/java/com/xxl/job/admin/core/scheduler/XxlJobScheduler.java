@@ -22,24 +22,33 @@ public class XxlJobScheduler  {
 
     public void init() throws Exception {
         // init i18n
+        // TODO 国际化阻塞策略
         initI18n();
 
         // admin trigger pool start
+        // TODO 初始化 fastTriggerPool（用于 执行任务（步骤四、步骤7） 、slowTriggerPool（用于 执行慢任务（步骤四、步骤7）） 线程池
+        //TODO 注意最大线程数 后面会用于 计算一次循环从数据库拉取的任务数
         JobTriggerPoolHelper.toStart();
 
         // admin registry monitor run
+        //TODO 1.初始化registryOrRemoveThreadPool（用于 客户端注册） 2.开启 registryMonitorThread （用于扫描 有没有对应执行器的 客户端地址 每30秒扫描一次
         JobRegistryHelper.getInstance().start();
 
         // admin fail-monitor run
+        //TODO 步骤4 开启线程 扫描异常任务 重试机制
         JobFailMonitorHelper.getInstance().start();
 
         // admin lose-monitor run ( depend on JobTriggerPoolHelper )
+        //TODO 初始化 callbackThreadPool（用于接收客户端执行状态） 线程池  启动 monitorThread 处理长期处于进行中的任务
         JobCompleteHelper.getInstance().start();
 
         // admin log report start
+        //todo 开启 logrThread 统计报表相关 间隔一分钟
+        //TODO 每次统计都是统计一天的 没做大数据量的限制 过大时会影响效率 可以做成增量的   在获取结果时异步 统计 或者每次只统计1分钟的
         JobLogReportHelper.getInstance().start();
 
         // start-schedule  ( depend on JobTriggerPoolHelper )
+        //TODO 步骤7 任务的预处理 scheduleThread  ringThread
         JobScheduleHelper.getInstance().start();
 
         logger.info(">>>>>>>>> init xxl-job admin success.");

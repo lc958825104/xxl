@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Created by xuxueli on 17/3/10.
+ * 通过调用 客户端 idleBeat 接口
  */
 public class ExecutorRouteBusyover extends ExecutorRouter {
 

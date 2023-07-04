@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by xuxueli on 16/7/22.
  */
+
 public class TriggerCallbackThread {
     private static Logger logger = LoggerFactory.getLogger(TriggerCallbackThread.class);
 
@@ -32,7 +33,7 @@ public class TriggerCallbackThread {
     }
 
     /**
-     * job results callback queue
+     * job results callback queue  有序阻塞队列
      */
     private LinkedBlockingQueue<HandleCallbackParam> callBackQueue = new LinkedBlockingQueue<HandleCallbackParam>();
     public static void pushCallBack(HandleCallbackParam callback){
@@ -42,6 +43,10 @@ public class TriggerCallbackThread {
 
     /**
      * callback thread
+     */
+    /** TODO 队列中的数据 是在每次任务执行完以后填充的 传递code及msg
+     * 一直循环从队列中获取数据 发生给xxl服务器（/api/callback）
+     * 如果失败了会写入log目录下  triggerRetryCallbackThread 线程会每隔30秒(可配置)重新发送
      */
     private Thread triggerCallbackThread;
     private Thread triggerRetryCallbackThread;
@@ -63,16 +68,19 @@ public class TriggerCallbackThread {
                 // normal callback
                 while(!toStop){
                     try {
+                        //TODO 从队列中取一个 阻塞方法
                         HandleCallbackParam callback = getInstance().callBackQueue.take();
                         if (callback != null) {
 
                             // callback list param
                             List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
+                            //TODO 将队列中所有对象全部取出
                             int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
                             callbackParamList.add(callback);
 
                             // callback, will retry if error
                             if (callbackParamList!=null && callbackParamList.size()>0) {
+                                //TODO
                                 doCallback(callbackParamList);
                             }
                         }
@@ -84,6 +92,7 @@ public class TriggerCallbackThread {
                 }
 
                 // last callback
+                //TODO 跳出循环 说明xxljob生命周期结束了 防止有数据还停留在队列中
                 try {
                     List<HandleCallbackParam> callbackParamList = new ArrayList<HandleCallbackParam>();
                     int drainToNum = getInstance().callBackQueue.drainTo(callbackParamList);
@@ -104,7 +113,7 @@ public class TriggerCallbackThread {
         triggerCallbackThread.start();
 
 
-        // retry
+        // TODO 扫描上一个线程 请求异常的数据 重新发送
         triggerRetryCallbackThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -163,10 +172,13 @@ public class TriggerCallbackThread {
     private void doCallback(List<HandleCallbackParam> callbackParamList){
         boolean callbackRet = false;
         // callback, will retry if error
+        //getAdminBizList 所有xxl服务器地址
         for (AdminBiz adminBiz: XxlJobExecutor.getAdminBizList()) {
             try {
+                //TODO 调用服务端 callback接口
                 ReturnT<String> callbackResult = adminBiz.callback(callbackParamList);
                 if (callbackResult!=null && ReturnT.SUCCESS_CODE == callbackResult.getCode()) {
+                    //日志记录
                     callbackLog(callbackParamList, "<br>----------- xxl-job job callback finish.");
                     callbackRet = true;
                     break;
@@ -178,6 +190,7 @@ public class TriggerCallbackThread {
             }
         }
         if (!callbackRet) {
+            //TODO 请求服务端异常处理（写进日志文件）  如果部分成功部分失败 是不是重复劳动 目前不会有这种场景
             appendFailCallbackFile(callbackParamList);
         }
     }
@@ -251,6 +264,7 @@ public class TriggerCallbackThread {
 
             List<HandleCallbackParam> callbackParamList = (List<HandleCallbackParam>) JdkSerializeTool.deserialize(callbackParamList_bytes, List.class);
 
+            //TODO 读取完了 直接删除
             callbaclLogFile.delete();
             doCallback(callbackParamList);
         }

@@ -27,9 +27,14 @@ public class JobLogFileCleanThread {
 
     private Thread localThread;
     private volatile boolean toStop = false;
+
+    /**
+     * 扫描指定路径下 日期格式的 文件夹 校验如果是指定日期之前的文件则删除  处理完了以后就sleep一天    支持 interrupt
+     * @param logRetentionDays
+     */
     public void start(final long logRetentionDays){
 
-        // limit min value
+        // TDOD 注意点 最小值三天一清理
         if (logRetentionDays < 3 ) {
             return;
         }
@@ -54,7 +59,7 @@ public class JobLogFileCleanThread {
 
                             for (File childFile: childDirs) {
 
-                                // valid
+                                // valid 生成的日志文件时日期格式的文件夹
                                 if (!childFile.isDirectory()) {
                                     continue;
                                 }
@@ -73,7 +78,7 @@ public class JobLogFileCleanThread {
                                 if (logFileCreateDate == null) {
                                     continue;
                                 }
-
+                                //基于日期校验是不是指定日期之前的文件夹 是则删除
                                 if ((todayDate.getTime()-logFileCreateDate.getTime()) >= logRetentionDays * (24 * 60 * 60 * 1000) ) {
                                     FileUtil.deleteRecursively(childFile);
                                 }

@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentMap;
  *      a(*)、LFU(Least Frequently Used)：最不经常使用，频率/次数
  *      b、LRU(Least Recently Used)：最近最久未使用，时间
  *
+ * 统计24小时内调用次数 最少的  每次调用通过map+1记录 如果是第一次则是随机生成调用次数  这个策略主要是当前节点调用次数 不是 被调方的 调用次数  如果是多节点不符合预期结果
  * Created by xuxueli on 17/3/10.
  */
 public class ExecutorRouteLFU extends ExecutorRouter {

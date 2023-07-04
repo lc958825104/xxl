@@ -28,6 +28,7 @@ public class XxlJobCompleter {
     public static int updateHandleInfoAndFinish(XxlJobLog xxlJobLog) {
 
         // finish
+        //执行字任务
         finishJob(xxlJobLog);
 
         // text最大64kb 避免长度过长
@@ -36,6 +37,7 @@ public class XxlJobCompleter {
         }
 
         // fresh handle
+        //更新log表
         return XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateHandleInfo(xxlJobLog);
     }
 

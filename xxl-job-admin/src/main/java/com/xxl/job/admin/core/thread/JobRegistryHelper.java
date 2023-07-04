@@ -1,17 +1,23 @@
 package com.xxl.job.admin.core.thread;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.XxlJobCluster;
 import com.xxl.job.admin.core.model.XxlJobGroup;
+import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobRegistry;
 import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.util.DateUtil;
+import com.xxl.job.core.util.IpUtil;
+import org.apache.catalina.startup.HostConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * job registry instance
@@ -26,8 +32,17 @@ public class JobRegistryHelper {
 	}
 
 	private ThreadPoolExecutor registryOrRemoveThreadPool = null;
+	private final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(new ThreadFactory() {
+		@Override
+		public Thread newThread(Runnable r) {
+			return new Thread(r, "cluster host registry");
+		}
+	});
+
 	private Thread registryMonitorThread;
 	private volatile boolean toStop = false;
+
+
 
 	public void start(){
 
@@ -59,10 +74,12 @@ public class JobRegistryHelper {
 				while (!toStop) {
 					try {
 						// auto registry group
+						//
 						List<XxlJobGroup> groupList = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().findByAddressType(0);
 						if (groupList!=null && !groupList.isEmpty()) {
 
 							// remove dead address (admin/executor)
+							//TODO 查询有没有90秒之前注册过的节点 有则直接删除
 							List<Integer> ids = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findDead(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (ids!=null && ids.size()>0) {
 								XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().removeDead(ids);
@@ -70,9 +87,11 @@ public class JobRegistryHelper {
 
 							// fresh online address (admin/executor)
 							HashMap<String, List<String>> appAddressMap = new HashMap<String, List<String>>();
+							//TODO 查询 90秒内注册过的
 							List<XxlJobRegistry> list = XxlJobAdminConfig.getAdminConfig().getXxlJobRegistryDao().findAll(RegistryConfig.DEAD_TIMEOUT, new Date());
 							if (list != null) {
 								for (XxlJobRegistry item: list) {
+									//TODO
 									if (RegistryConfig.RegistType.EXECUTOR.name().equals(item.getRegistryGroup())) {
 										String appname = item.getRegistryKey();
 										List<String> registryList = appAddressMap.get(appname);
@@ -103,7 +122,7 @@ public class JobRegistryHelper {
 								}
 								group.setAddressList(addressListStr);
 								group.setUpdateTime(new Date());
-
+								//TODO 循环更新 执行器 对应的 注册列表
 								XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().update(group);
 							}
 						}
@@ -113,6 +132,7 @@ public class JobRegistryHelper {
 						}
 					}
 					try {
+						//TODO 间隔30秒
 						TimeUnit.SECONDS.sleep(RegistryConfig.BEAT_TIMEOUT);
 					} catch (InterruptedException e) {
 						if (!toStop) {
@@ -126,6 +146,29 @@ public class JobRegistryHelper {
 		registryMonitorThread.setDaemon(true);
 		registryMonitorThread.setName("xxl-job, admin JobRegistryMonitorHelper-registryMonitorThread");
 		registryMonitorThread.start();
+
+
+		this.scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					XxlJobAdminConfig.getAdminConfig().getXxlJobClusterDao().replace(XxlJobAdminConfig.getAdminConfig().getHostName());
+
+					Date date = new Date();
+
+					XxlJobAdminConfig.getAdminConfig().getXxlJobClusterDao().delete(DateUtil.addMinutes(date,-5));
+
+					XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().findOldClusterInfo();
+					if(jobInfo!=null){
+						XxlJobAdminConfig.getAdminConfig().getJobAllocation().init(false);
+						XxlJobAdminConfig.getAdminConfig().getJobAllocation().flush();
+					}
+				} catch (Exception e) {
+					logger.error("ScheduledTask fetchNameServerAddr exception", e);
+				}
+			}
+		}, 0, 1000 * 30, TimeUnit.MILLISECONDS);
 	}
 
 	public void toStop(){
