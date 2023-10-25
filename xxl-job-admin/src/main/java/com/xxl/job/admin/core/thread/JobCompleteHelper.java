@@ -9,6 +9,7 @@ import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.concurrent.*;
  */
 public class JobCompleteHelper {
 	private static Logger logger = LoggerFactory.getLogger(JobCompleteHelper.class);
-	
+
 	private static JobCompleteHelper instance = new JobCompleteHelper();
 	public static JobCompleteHelper getInstance(){
 		return instance;
@@ -98,15 +99,15 @@ public class JobCompleteHelper {
 						}
 					}
 
-                    try {
-                        TimeUnit.SECONDS.sleep(60);
-                    } catch (Exception e) {
-                        if (!toStop) {
-                            logger.error(e.getMessage(), e);
-                        }
-                    }
+					try {
+						TimeUnit.SECONDS.sleep(60);
+					} catch (Exception e) {
+						if (!toStop) {
+							logger.error(e.getMessage(), e);
+						}
+					}
 
-                }
+				}
 
 				logger.info(">>>>>>>>>>> xxl-job, JobLosedMonitorHelper stop");
 
@@ -136,10 +137,15 @@ public class JobCompleteHelper {
 	// ---------------------- helper ----------------------
 
 	public ReturnT<String> callback(List<HandleCallbackParam> callbackParamList) {
+		//			If the collection is null, a null exception is thrown
+		if (CollectionUtils.isEmpty(callbackParamList)) {
+			return ReturnT.SUCCESS;
+		}
 
 		callbackThreadPool.execute(new Runnable() {
 			@Override
 			public void run() {
+				//			If the collection is null, a null exception is thrown
 				for (HandleCallbackParam handleCallbackParam: callbackParamList) {
 					ReturnT<String> callbackResult = callback(handleCallbackParam);
 					logger.debug(">>>>>>>>> JobApiController.callback {}, handleCallbackParam={}, callbackResult={}",
