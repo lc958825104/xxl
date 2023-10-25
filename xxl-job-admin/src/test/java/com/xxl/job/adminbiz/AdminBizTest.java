@@ -7,8 +7,10 @@ import com.xxl.job.core.biz.model.RegistryParam;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
 import com.xxl.job.core.enums.RegistryConfig;
+import com.xxl.job.core.util.GsonTool;
 import org.junit.jupiter.api.Test;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 
@@ -72,4 +74,32 @@ public class AdminBizTest {
 
     }
 
+    /**
+     *
+     * {@link com.xxl.job.admin.controller.JobApiController#api(HttpServletRequest, String, String)}
+     * if ("callback".equals(uri))
+     *
+     *  ERROR c.x.j.a.c.r.WebExceptionResolver - WebExceptionResolver:{}
+     * java.lang.NullPointerException: null
+     *         at com.xxl.job.admin.service.impl.AdminBizImpl.callback(AdminBizImpl.java:67)
+     *         at com.xxl.job.admin.service.impl.AdminBizImpl.callback(AdminBizImpl.java:47)
+     *         at com.xxl.job.admin.controller.JobApiController.api(JobApiController.java:59)
+     *
+     * @throws Exception
+     */
+    @Test
+    public void callbackNullException() throws Exception {
+        String data1 = "";
+
+        List<HandleCallbackParam> callbackParamList1 = GsonTool.fromJson(data1, List.class, HandleCallbackParam.class);
+
+        try {
+            for (HandleCallbackParam handleCallbackParam : callbackParamList1) {
+                System.out.println("item:"+handleCallbackParam);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
 }
