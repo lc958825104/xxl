@@ -70,6 +70,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     // dao, service
 
     @Resource
+    private XxlJobCheckDao xxlJobCheckDao;
+    
+    @Resource
     private XxlJobLogDao xxlJobLogDao;
     @Resource
     private XxlJobInfoDao xxlJobInfoDao;
@@ -154,5 +157,9 @@ public class XxlJobAdminConfig implements InitializingBean, DisposableBean {
     public JobAlarmer getJobAlarmer() {
         return jobAlarmer;
     }
+
+	public XxlJobCheckDao getXxlJobCheckDao() {
+		return xxlJobCheckDao;
+	}
 
 }

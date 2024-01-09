@@ -1,17 +1,22 @@
 package com.xxl.job.admin.core.complete;
 
 import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
+import com.xxl.job.admin.core.model.XxlJobCheck;
 import com.xxl.job.admin.core.model.XxlJobInfo;
 import com.xxl.job.admin.core.model.XxlJobLog;
 import com.xxl.job.admin.core.thread.JobTriggerPoolHelper;
 import com.xxl.job.admin.core.trigger.TriggerTypeEnum;
 import com.xxl.job.admin.core.util.I18nUtil;
+import com.xxl.job.admin.dao.XxlJobCheckDao;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.context.XxlJobContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author xuxueli 2020-10-30 20:43:10
@@ -56,7 +61,10 @@ public class XxlJobCompleter {
                 for (int i = 0; i < childJobIds.length; i++) {
                     int childJobId = (childJobIds[i]!=null && childJobIds[i].trim().length()>0 && isNumeric(childJobIds[i]))?Integer.valueOf(childJobIds[i]):-1;
                     if (childJobId > 0) {
-
+                    	
+                    	//save and check dependency
+                    	if( ! saveAndCheckChild(xxlJobInfo.getId(), childJobId)) continue;
+                    	
                         JobTriggerPoolHelper.trigger(childJobId, TriggerTypeEnum.PARENT, -1, null, null, null);
                         ReturnT<String> triggerChildResult = ReturnT.SUCCESS;
 
@@ -87,7 +95,49 @@ public class XxlJobCompleter {
 
     }
 
-    private static boolean isNumeric(String str){
+  //save and check dependency
+    private static boolean saveAndCheckChild(int doneJobId, int childJobId) {
+    	logger.info("任务{}已完成，检查子任务{}前置", doneJobId, childJobId);
+    	XxlJobCheck check=new XxlJobCheck();
+    	check.setChildJobId(childJobId);
+    	check.setDoneJobId(doneJobId);
+		XxlJobCheckDao dao = XxlJobAdminConfig.getAdminConfig().getXxlJobCheckDao();
+		dao.save(check);
+		List<XxlJobCheck> done = dao.list(childJobId);
+		List<String> shouldDone=getAllPreJobId(childJobId);
+		for(XxlJobCheck each: done) {
+			shouldDone.remove(   each.getDoneJobId()+"");
+		}
+		boolean result = false;
+		if(shouldDone.size()==0) {
+			logger.info("子任务{}前置全部完成",childJobId);
+			if(dao.delete(childJobId) ==done.size()) {
+				logger.info("子任务{}前置满足，将要执行",childJobId);
+				result =true;
+			}else {
+				logger.info("子任务{}前置满足，已被执行！",childJobId);
+			}
+		}else {
+			logger.info("子任务{}等待前置{}完成中",childJobId, shouldDone);
+		}
+		return result;
+	}
+
+
+	private static List<String> getAllPreJobId(int childJobId) {
+		List<String> result = new LinkedList<>();
+		List<XxlJobInfo> pageList = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().pageList(0, Integer.MAX_VALUE, -1, -1, null, null, null);
+		for(XxlJobInfo info : pageList) {
+			for(String child: info.getChildJobId().split(",")) {
+				if(child.trim().equals(childJobId+"")) result.add(""+info.getId());
+			}
+		}
+		logger.info("{}的前置任务id：{}", childJobId, result.toString() );
+		return result;
+	}
+
+
+	private static boolean isNumeric(String str){
         try {
             int result = Integer.valueOf(str);
             return true;
